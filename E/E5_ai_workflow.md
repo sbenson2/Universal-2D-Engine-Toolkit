@@ -1,5 +1,5 @@
 # E5 — AI-Assisted Development Workflow
-> **Category:** Explanation · **Related:** [E4 Project Management](./E4_project_management.md) · [R3 Project Structure](../R/R3_project_structure.md) · [G11 Programming Principles](../G/G11_programming_principles.md)
+> **Category:** Explanation · **Related:** [E4 Project Management](./E4_project_management.md) · [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) · [R3 Project Structure](../R/R3_project_structure.md) · [G11 Programming Principles](../G/G11_programming_principles.md)
 
 ---
 
@@ -52,6 +52,8 @@ Create a CONTEXT.md file in your project root. Feed it to AI with every prompt:
 - **Refactoring:** Extracting interfaces, splitting god classes, renaming
 - **Pattern implementation:** Give it a pattern description, get a concrete implementation
 
+> **Deep dive:** [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) — realistic productivity data (10–20% gains), ECS-specific AI synergies, cognitive atrophy risk, brainstorming as top non-code use
+
 ---
 
 ## What AI Is Bad At (Write It Yourself)
@@ -61,6 +63,8 @@ Create a CONTEXT.md file in your project root. Feed it to AI with every prompt:
 - State machine transitions with subtle timing requirements
 - Performance-critical inner loops (measure, don't trust AI's optimization instincts)
 - Anything involving your game's unique "feel" — jump arcs, attack timing, camera behavior
+
+> **Deep dive:** [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) — AI art pipeline (70/30 rule, img2img workflow, LoRA training, ComfyUI), "AI slop" reputational risk
 
 ---
 

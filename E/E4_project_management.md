@@ -1,5 +1,5 @@
 # E4 — Solo Project Management
-> **Category:** Explanation · **Related:** [E5 AI Workflow](./E5_ai_workflow.md) · [R3 Project Structure](../R/R3_project_structure.md)
+> **Category:** Explanation · **Related:** [E5 AI Workflow](./E5_ai_workflow.md) · [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) · [R3 Project Structure](../R/R3_project_structure.md)
 
 ---
 
@@ -17,6 +17,8 @@ Each 1-2 week sprint should end with a playable build:
 
 **Build the Minimum Viable Game Loop first** — the absolute core mechanic stripped of UI, story, and polish. Validate it's fun before investing in anything else.
 
+> **Deep dive:** [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) — 5-level goal hierarchy, Kanban vs sprints for solo dev, case studies from Stardew Valley/Balatro/Vampire Survivors
+
 ---
 
 ## Scope Management
@@ -30,6 +32,8 @@ Apply MoSCoW ruthlessly:
 Multiply every time estimate by 2-3x. Bug fixing typically consumes 30% of development time.
 
 Write a design doc (DESIGN.md) with game pillars, target audience, core loop, and feature list with MoSCoW priorities. Cross out old decisions with dates when they change. This prevents scope creep by making every addition a conscious decision against a documented plan.
+
+> **Deep dive:** [E9 Solo Dev Playbook](./E9_solo_dev_playbook.md) — scope creep as the universal killer, AI amplification risk, Polaris Framework for fix/polish phase, design pillars as filter
 
 ---
 
