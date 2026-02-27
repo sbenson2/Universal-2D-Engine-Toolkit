@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal 2D Engine Toolkit — Build Games, Not Frameworks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Anybody:wght@100;400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & FOUNDATION
+   ═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #0a0a0f;
+  --bg-surface: #12121a;
+  --bg-elevated: #1a1a26;
+  --bg-card: #16161f;
+  --text-primary: #e8e6e3;
+  --text-secondary: #8a8899;
+  --text-muted: #5a5868;
+  --accent-fire: #ff6a35;
+  --accent-fire-dim: #cc4a1a;
+  --accent-water: #35b8ff;
+  --accent-wind: #7aff8a;
+  --accent-earth: #d4a057;
+  --accent-lightning: #c89aff;
+  --accent-ice: #8aefff;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glow: rgba(255, 106, 53, 0.15);
+  --font-display: 'Anybody', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'DM Mono', 'SF Mono', monospace;
+  --grid-gap: 1px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-fire-dim) var(--bg-deep);
+}
+
+body {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent-fire);
+  color: var(--bg-deep);
+}
+
+a {
+  color: var(--accent-fire);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--accent-water); }
+
+/* ═══════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+   ═══════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════ */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+}
+
+section {
+  padding: clamp(4rem, 8vw, 8rem) 0;
+}
+
+/* ═══════════════════════════════════════════════
+   TOPBAR
+   ═══════════════════════════════════════════════ */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 0;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: transform 0.3s;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.topbar-logo span { color: var(--accent-fire); }
+
+.topbar-nav {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.topbar-nav a {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+.topbar-nav a:hover { color: var(--text-primary); }
+
+.topbar-cta {
+  font-size: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--accent-fire);
+  color: var(--accent-fire);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.topbar-cta:hover {
+  background: var(--accent-fire);
+  color: var(--bg-deep);
+}
+
+/* ═══════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding-top: 6rem;
+}
+
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-fire);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-fire);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  max-width: 14ch;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.hero h1 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent-fire);
+}
+
+.hero-sub {
+  margin-top: 2rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--text-secondary);
+  max-width: 50ch;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+
+.hero-stat-value {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2rem;
+  color: var(--text-primary);
+}
+
+.hero-stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: var(--accent-fire);
+  color: var(--bg-deep);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover {
+  background: #ff8055;
+  color: var(--bg-deep);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════
+   PHILOSOPHY SECTION
+   ═══════════════════════════════════════════════ */
+.philosophy {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.philosophy-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-fire);
+  margin-bottom: 1.5rem;
+}
+
+.philosophy h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.philosophy h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.philosophy-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  padding-top: 1rem;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+  margin-top: 4rem;
+}
+
+.comparison-col {
+  padding: 2.5rem;
+  background: var(--bg-surface);
+}
+
+.comparison-col:first-child {
+  border-right: 1px solid var(--border-subtle);
+}
+
+.comparison-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.comparison-col:first-child .comparison-title {
+  color: var(--text-muted);
+}
+
+.comparison-col:last-child .comparison-title {
+  color: var(--accent-fire);
+}
+
+.comparison-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comparison-list li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.comparison-col:first-child .comparison-list li::before {
+  content: '×';
+  position: absolute;
+  left: 0;
+  color: #ff4444;
+  font-weight: 700;
+}
+
+.comparison-col:last-child .comparison-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent-fire);
+}
+
+/* ═══════════════════════════════════════════════
+   STACK SECTION
+   ═══════════════════════════════════════════════ */
+.stack {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.stack h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.stack h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.tier-grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.tier {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.tier-label {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.tier-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tier-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.tier-packages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--grid-gap);
+  padding: var(--grid-gap);
+}
+
+.pkg {
+  flex: 1 1 200px;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+  transition: background 0.2s;
+}
+
+.pkg:hover {
+  background: var(--bg-elevated);
+}
+
+.pkg-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.pkg-role {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.pkg-version {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════
+   SHADER DEMO
+   ═══════════════════════════════════════════════ */
+.demo-section {
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.demo-header {
+  margin-bottom: 3rem;
+}
+
+.demo-header h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.demo-header h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.demo-header p {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 55ch;
+}
+
+.shader-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  border: 1px solid var(--border-subtle);
+  border-bottom: none;
+  width: fit-content;
+}
+
+.shader-tab {
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: none;
+  border-right: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.shader-tab:last-child { border-right: none; }
+
+.shader-tab:hover { color: var(--text-secondary); }
+
+.shader-tab.active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.shader-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.shader-tab[data-shader="fire"].active::after { background: var(--accent-fire); }
+.shader-tab[data-shader="water"].active::after { background: var(--accent-water); }
+.shader-tab[data-shader="wind"].active::after { background: var(--accent-wind); }
+.shader-tab[data-shader="lightning"].active::after { background: var(--accent-lightning); }
+.shader-tab[data-shader="ice"].active::after { background: var(--accent-ice); }
+.shader-tab[data-shader="earth"].active::after { background: var(--accent-earth); }
+
+.demo-viewport {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  min-height: 480px;
+}
+
+.demo-canvas-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.demo-fps {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  background: rgba(10, 10, 15, 0.7);
+  padding: 0.25rem 0.5rem;
+}
+
+.demo-sidebar {
+  border-left: 1px solid var(--border-subtle);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-sidebar-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.demo-code {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  white-space: pre;
+  tab-size: 4;
+}
+
+.demo-code .kw { color: var(--accent-lightning); }
+.demo-code .fn { color: var(--accent-water); }
+.demo-code .num { color: var(--accent-fire); }
+.demo-code .cm { color: var(--text-muted); }
+.demo-code .str { color: var(--accent-wind); }
+.demo-code .type { color: var(--accent-earth); }
+
+.demo-controls {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.control-value {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 2px;
+  background: var(--border-subtle);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-fire);
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════
+   CAPABILITIES GRID
+   ═══════════════════════════════════════════════ */
+.capabilities {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.capabilities h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.capabilities h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+}
+
+.cap-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 2.5rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.cap-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-fire);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.cap-card:hover::before {
+  transform: scaleX(1);
+}
+
+.cap-card:hover {
+  background: var(--bg-elevated);
+}
+
+.cap-icon {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.cap-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.01em;
+}
+
+.cap-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.cap-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.cap-tag {
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 106, 53, 0.08);
+  color: var(--accent-fire-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════
+   GLUE CODE SECTION
+   ═══════════════════════════════════════════════ */
+.glue {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.glue h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.glue h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.glue-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 55ch;
+  margin-bottom: 3rem;
+}
+
+.glue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--grid-gap);
+}
+
+.glue-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  transition: background 0.2s;
+}
+
+.glue-item:hover { background: var(--bg-elevated); }
+
+.glue-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.glue-lines {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   DOCS STRUCTURE
+   ═══════════════════════════════════════════════ */
+.docs-section {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.docs-section h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.docs-section h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.docs-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 55ch;
+  margin-bottom: 3rem;
+}
+
+.doc-categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--grid-gap);
+}
+
+.doc-category {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 2rem;
+  transition: background 0.2s;
+}
+
+.doc-category:hover { background: var(--bg-elevated); }
+
+.doc-cat-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.doc-cat-name {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.doc-cat-count {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.doc-cat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.doc-cat-list li {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.doc-cat-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   QUICKSTART
+   ═══════════════════════════════════════════════ */
+.quickstart {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.quickstart h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 3rem;
+}
+
+.quickstart h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.steps {
+  display: grid;
+  gap: 0;
+  counter-reset: step;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  border: 1px solid var(--border-subtle);
+  border-bottom: none;
+  counter-increment: step;
+}
+
+.step:last-child { border-bottom: 1px solid var(--border-subtle); }
+
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.step-num::before {
+  content: counter(step, decimal-leading-zero);
+}
+
+.step-content {
+  padding: 2rem 2.5rem;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.step-code {
+  background: var(--bg-deep);
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--accent-fire);
+  overflow-x: auto;
+  margin-top: 0.75rem;
+  border: 1px solid var(--border-subtle);
+}
+
+.step-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════
+   BATTLE TESTED
+   ═══════════════════════════════════════════════ */
+.proven {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.proven-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.proven h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.proven h2 em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.proven p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.proven-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
+}
+
+.proven-stat {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 2rem;
+  text-align: center;
+}
+
+.proven-stat-val {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 2.5rem;
+  color: var(--accent-fire);
+}
+
+.proven-stat-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 4rem 0;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.footer-left strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.footer-right {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.75rem;
+}
+
+.footer-right a {
+  color: var(--text-muted);
+}
+.footer-right a:hover { color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Scroll-triggered animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .philosophy-header { grid-template-columns: 1fr; gap: 2rem; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .cap-grid { grid-template-columns: repeat(2, 1fr); }
+  .doc-categories { grid-template-columns: repeat(2, 1fr); }
+  .demo-viewport { grid-template-columns: 1fr; }
+  .demo-sidebar { max-height: 300px; }
+  .proven-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .tier { grid-template-columns: 1fr; }
+  .tier-label { border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 1.5rem 2rem; }
+}
+
+@media (max-width: 768px) {
+  .topbar-nav { display: none; }
+  .cap-grid { grid-template-columns: 1fr; }
+  .doc-categories { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; gap: 1.5rem; }
+  .hero-actions { flex-direction: column; }
+  .shader-tabs { flex-wrap: wrap; }
+  .proven-stats-grid { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+  .step { grid-template-columns: 60px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<nav class="topbar">
+  <div class="container topbar-inner">
+    <div class="topbar-logo">U2D<span>TK</span></div>
+    <ul class="topbar-nav">
+      <li><a href="#philosophy">Philosophy</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#demo">Shaders</a></li>
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#docs">Docs</a></li>
+      <li><a href="#quickstart">Quickstart</a></li>
+    </ul>
+    <a href="https://github.com/sbenson2/Universal-2D-Engine-Toolkit" class="topbar-cta">View on GitHub</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="container hero-content">
+    <div class="hero-badge">MonoGame + Arch ECS + Composed Libraries</div>
+    <h1>Build <em>games,</em> not frameworks</h1>
+    <p class="hero-sub">
+      A complete 2D game development toolkit. 42 production-grade docs, battle-tested library stack,
+      working shader code, and ~1,000 lines of glue that replace 50,000 lines of framework lock-in.
+    </p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-value">42</div>
+        <div class="hero-stat-label">Documents</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">29</div>
+        <div class="hero-stat-label">Implementation Guides</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">~1K</div>
+        <div class="hero-stat-label">Lines of Glue Code</div>
+      </div>
+      <div>
+        <div class="hero-stat-value">10+</div>
+        <div class="hero-stat-label">Libraries Integrated</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#quickstart" class="btn-primary">Get Started &darr;</a>
+      <a href="#demo" class="btn-secondary">Live Shader Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PHILOSOPHY ═══════════════════ -->
+<section class="philosophy" id="philosophy">
+  <div class="container">
+    <div class="philosophy-header reveal">
+      <div>
+        <div class="section-label">Philosophy</div>
+        <h2>Compose <em>libraries.</em><br>Own your <em>code.</em></h2>
+      </div>
+      <div class="philosophy-text">
+        Every library is independently replaceable. If one goes unmaintained, swap
+        that single piece — not your entire project. NuGet install, dotnet restore,
+        ship. No git submodules. No compiling 50,000 lines of framework source you'll
+        never read.
+      </div>
+    </div>
+    <div class="comparison-grid reveal">
+      <div class="comparison-col">
+        <div class="comparison-title">Monolithic frameworks</div>
+        <ul class="comparison-list">
+          <li>50,000+ lines of framework source code</li>
+          <li>Git submodule dependency management</li>
+          <li>Framework dies when maintainer leaves</li>
+          <li>Deep coupling — can't swap subsystems</li>
+          <li>Framework upgrades break your game</li>
+        </ul>
+      </div>
+      <div class="comparison-col">
+        <div class="comparison-title">Composed libraries</div>
+        <ul class="comparison-list">
+          <li>~1,000 lines of glue you fully understand</li>
+          <li>NuGet packages — dotnet restore and go</li>
+          <li>Each library maintained independently</li>
+          <li>Swap any single piece without rewiring</li>
+          <li>Upgrade one package at a time</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STACK ═══════════════════ -->
+<section class="stack" id="stack">
+  <div class="container">
+    <div class="section-label reveal">The Stack</div>
+    <h2 class="reveal">Every package <em>earns</em> its place</h2>
+    <div class="tier-grid reveal">
+
+      <div class="tier">
+        <div class="tier-label">
+          <div class="tier-name">Tier 0</div>
+          <div class="tier-desc">Always present</div>
+        </div>
+        <div class="tier-packages">
+          <div class="pkg">
+            <div class="pkg-name">MonoGame</div>
+            <div class="pkg-role">Rendering, windowing, audio, content pipeline</div>
+            <div class="pkg-version">3.8.x — DesktopGL / iOS</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">Arch ECS</div>
+            <div class="pkg-role">High-performance archetype entity component system</div>
+            <div class="pkg-version">2.1.0 + System + SourceGenerator</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-label">
+          <div class="tier-name">Tier 1</div>
+          <div class="tier-desc">Essential infrastructure</div>
+        </div>
+        <div class="tier-packages">
+          <div class="pkg">
+            <div class="pkg-name">MonoGame.Extended</div>
+            <div class="pkg-role">Camera, Tiled, collision shapes, math</div>
+            <div class="pkg-version">5.3.1</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">Gum.MonoGame</div>
+            <div class="pkg-role">UI framework with visual editor</div>
+            <div class="pkg-version">2026.x</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">Apos.Input</div>
+            <div class="pkg-role">Keyboard / mouse / gamepad / touch</div>
+            <div class="pkg-version">2.5.0</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">FontStashSharp</div>
+            <div class="pkg-role">Runtime .ttf / .otf at any size</div>
+            <div class="pkg-version">1.3.7</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">Aether.Physics2D</div>
+            <div class="pkg-role">Box2D-style rigid body, joints, CCD</div>
+            <div class="pkg-version">2.2.0</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">MonoGame.Aseprite</div>
+            <div class="pkg-role">Direct .ase sprite import</div>
+            <div class="pkg-version">6.3.1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-label">
+          <div class="tier-name">Tier 2</div>
+          <div class="tier-desc">Genre-specific</div>
+        </div>
+        <div class="tier-packages">
+          <div class="pkg">
+            <div class="pkg-name">LiteNetLib</div>
+            <div class="pkg-role">Reliable UDP, NAT traversal</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">FmodForFoxes</div>
+            <div class="pkg-role">Full FMOD DSP audio engine</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">BrainAI</div>
+            <div class="pkg-role">FSM, BT, GOAP, pathfinding</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">Arch.Persistence</div>
+            <div class="pkg-role">Serialize entire ECS worlds</div>
+          </div>
+          <div class="pkg">
+            <div class="pkg-name">ImGui.NET</div>
+            <div class="pkg-role">Debug overlays, inspectors</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SHADER DEMO ═══════════════════ -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="demo-header reveal">
+      <div class="section-label">Interactive Demo</div>
+      <h2>Production <em>shaders,</em> not pseudocode</h2>
+      <p>Real HLSL effects from the toolkit — fire, water, wind, lightning, ice, earth. Every line ships as working code with tuning values and C# integration patterns.</p>
+    </div>
+
+    <div class="shader-tabs reveal">
+      <button class="shader-tab active" data-shader="fire">Fire</button>
+      <button class="shader-tab" data-shader="water">Water</button>
+      <button class="shader-tab" data-shader="wind">Wind</button>
+      <button class="shader-tab" data-shader="lightning">Lightning</button>
+      <button class="shader-tab" data-shader="ice">Ice</button>
+      <button class="shader-tab" data-shader="earth">Earth</button>
+    </div>
+
+    <div class="demo-viewport reveal">
+      <div class="demo-canvas-wrap">
+        <canvas id="shaderCanvas"></canvas>
+        <div class="demo-fps" id="fpsCounter">60 fps</div>
+      </div>
+      <div class="demo-sidebar">
+        <div class="demo-sidebar-header">
+          <span>HLSL Source</span>
+          <span id="shaderLabel">Fire.fx</span>
+        </div>
+        <div class="demo-code" id="shaderCode"></div>
+        <div class="demo-controls">
+          <div class="control-row">
+            <span class="control-label">Speed</span>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+              <span class="control-value" id="speedValue">1.0x</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Intensity</span>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <input type="range" id="intensitySlider" min="0.1" max="2" step="0.1" value="1">
+              <span class="control-value" id="intensityValue">1.0x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CAPABILITIES ═══════════════════ -->
+<section class="capabilities" id="capabilities">
+  <div class="container">
+    <div class="section-label reveal">Capability Matrix</div>
+    <h2 class="reveal">Everything you need, <em>nothing</em> you don't</h2>
+
+    <div class="cap-grid reveal">
+      <div class="cap-card">
+        <div class="cap-icon">&#9638;</div>
+        <div class="cap-title">Rendering Pipeline</div>
+        <div class="cap-desc">Render layers, post-processing pipeline, deferred 2D lighting, custom HLSL shaders, sprite animation, parallax scrolling, screen transitions.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">SpriteBatch</span>
+          <span class="cap-tag">Post-FX</span>
+          <span class="cap-tag">Bloom</span>
+          <span class="cap-tag">CRT</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#10038;</div>
+        <div class="cap-title">Elemental Shaders</div>
+        <div class="cap-desc">Production HLSL for fire, water, wind, earth, lightning, and ice. FBM noise, Voronoi, caustics, heat haze — with tuning values from real games.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">FBM</span>
+          <span class="cap-tag">Voronoi</span>
+          <span class="cap-tag">Caustics</span>
+          <span class="cap-tag">Color Ramp</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9881;</div>
+        <div class="cap-title">Arch ECS</div>
+        <div class="cap-desc">One entity model for everything — mass entities (bullets, particles) and unique entities (player, bosses). Source-generated systems, typed events, relationships.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">Archetypes</span>
+          <span class="cap-tag">SourceGen</span>
+          <span class="cap-tag">AOT</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9670;</div>
+        <div class="cap-title">Collision & Physics</div>
+        <div class="cap-desc">SpatialHash broadphase, AABB / circle / polygon SAT, full Box2D rigid body physics with Aether, Verlet rope and cloth simulation.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">SAT</span>
+          <span class="cap-tag">Box2D</span>
+          <span class="cap-tag">Verlet</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9733;</div>
+        <div class="cap-title">AI Systems</div>
+        <div class="cap-desc">FSM, Behavior Trees, GOAP, Utility AI, A*/Dijkstra/BFS pathfinding, influence maps. Genre-specific patterns for platformers, RPG, RTS, stealth.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">BrainAI</span>
+          <span class="cap-tag">FSM</span>
+          <span class="cap-tag">GOAP</span>
+          <span class="cap-tag">Pathfinding</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9783;</div>
+        <div class="cap-title">Cross-Platform</div>
+        <div class="cap-desc">Windows, macOS, Linux, iOS validated. Android planned. Core project is 95%+ shared. Desktop launcher: 3 lines. iOS launcher: ~25 lines.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">DesktopGL</span>
+          <span class="cap-tag">iOS</span>
+          <span class="cap-tag">ProMotion</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9776;</div>
+        <div class="cap-title">UI Framework</div>
+        <div class="cap-desc">Gum.MonoGame with visual editor, forms controls, anchor layout. FontStashSharp for runtime TTF. ImGui for debug tooling and inspectors.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">Gum</span>
+          <span class="cap-tag">Forms</span>
+          <span class="cap-tag">ImGui</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#9836;</div>
+        <div class="cap-title">Audio & Input</div>
+        <div class="cap-desc">Built-in MonoGame audio with FMOD upgrade path. Apos.Input for unified keyboard, mouse, gamepad, and touch with JustPressed tracking.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">FMOD</span>
+          <span class="cap-tag">Touch</span>
+          <span class="cap-tag">Gamepad</span>
+        </div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">&#8644;</div>
+        <div class="cap-title">Networking</div>
+        <div class="cap-desc">LiteNetLib reliable UDP, rollback netcode, client-server authority, delta compression, client-side prediction. NAT traversal built in.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">UDP</span>
+          <span class="cap-tag">Rollback</span>
+          <span class="cap-tag">NAT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GLUE CODE ═══════════════════ -->
+<section class="glue" id="glue">
+  <div class="container">
+    <div class="section-label reveal">Custom Glue</div>
+    <h2 class="reveal">~1,000 lines. <em>All</em> yours.</h2>
+    <p class="glue-sub reveal">Every line is readable, debuggable, and modifiable. No framework source to untangle. Copy, adapt, ship.</p>
+
+    <div class="glue-grid reveal">
+      <div class="glue-item"><span class="glue-name">SceneManager</span><span class="glue-lines">~150 lines</span></div>
+      <div class="glue-item"><span class="glue-name">RenderLayerSystem</span><span class="glue-lines">~200 lines</span></div>
+      <div class="glue-item"><span class="glue-name">SpatialHash</span><span class="glue-lines">~80 lines</span></div>
+      <div class="glue-item"><span class="glue-name">CollisionShapes</span><span class="glue-lines">~150 lines</span></div>
+      <div class="glue-item"><span class="glue-name">TweenSystem</span><span class="glue-lines">~100 lines</span></div>
+      <div class="glue-item"><span class="glue-name">ScreenTransitions</span><span class="glue-lines">~100 lines</span></div>
+      <div class="glue-item"><span class="glue-name">PostProcessor</span><span class="glue-lines">~150 lines</span></div>
+      <div class="glue-item"><span class="glue-name">ObjectPool</span><span class="glue-lines">~30 lines</span></div>
+      <div class="glue-item"><span class="glue-name">LineRenderer</span><span class="glue-lines">~50 lines</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DOCS ═══════════════════ -->
+<section class="docs-section" id="docs">
+  <div class="container">
+    <div class="section-label reveal">Documentation</div>
+    <h2 class="reveal">42 docs, <em>Diataxis</em> structured</h2>
+    <p class="docs-sub reveal">Organized by how you learn: tutorials to get started, guides for specific tasks, reference for lookup, explanations for understanding.</p>
+
+    <div class="doc-categories reveal">
+      <div class="doc-category">
+        <div class="doc-cat-label" style="color:var(--accent-fire)">G</div>
+        <div class="doc-cat-name">Guides</div>
+        <div class="doc-cat-count">29 implementation guides</div>
+        <ul class="doc-cat-list">
+          <li>Rendering & graphics</li>
+          <li>Shaders & effects (HLSL)</li>
+          <li>Physics & collision</li>
+          <li>AI systems</li>
+          <li>UI framework</li>
+          <li>Display & resolution</li>
+          <li>Camera systems</li>
+          <li>Top-down perspective</li>
+          <li>Game editor</li>
+        </ul>
+      </div>
+      <div class="doc-category">
+        <div class="doc-cat-label" style="color:var(--accent-water)">E</div>
+        <div class="doc-cat-name">Explanations</div>
+        <div class="doc-cat-count">9 deep-dive articles</div>
+        <ul class="doc-cat-list">
+          <li>Architecture overview</li>
+          <li>Solo dev playbook</li>
+          <li>AI-assisted workflow</li>
+          <li>Game design fundamentals</li>
+          <li>Emergent puzzle design</li>
+          <li>MonoGameStudio post-mortem</li>
+        </ul>
+      </div>
+      <div class="doc-category">
+        <div class="doc-cat-label" style="color:var(--accent-wind)">R</div>
+        <div class="doc-cat-name">Reference</div>
+        <div class="doc-cat-count">4 reference documents</div>
+        <ul class="doc-cat-list">
+          <li>Library stack + install</li>
+          <li>Capability matrix</li>
+          <li>Project structure</li>
+          <li>GDC talks & books</li>
+        </ul>
+      </div>
+      <div class="doc-category">
+        <div class="doc-cat-label" style="color:var(--accent-lightning)">C</div>
+        <div class="doc-cat-name">Catalogs</div>
+        <div class="doc-cat-count">2 genre catalogs</div>
+        <ul class="doc-cat-list">
+          <li>13 genre breakdowns</li>
+          <li>Game feel craft</li>
+          <li>Juice toolkit with values</li>
+          <li>Coyote time, squash/stretch</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ QUICKSTART ═══════════════════ -->
+<section class="quickstart" id="quickstart">
+  <div class="container">
+    <div class="section-label reveal">Get Started</div>
+    <h2 class="reveal">Zero to <em>rendering</em> in 5 minutes</h2>
+
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <div class="step-title">Create your MonoGame project</div>
+          <div class="step-code">dotnet new mgdesktopgl -o MyGame</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <div class="step-title">Install the core stack</div>
+          <div class="step-code">dotnet add package Arch --version 2.1.0
+dotnet add package Arch.System --version 1.1.0
+dotnet add package MonoGame.Extended --version 5.3.1
+dotnet add package Apos.Input --version 2.5.0
+dotnet add package FontStashSharp.MonoGame --version 1.3.7</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <div class="step-title">Copy the glue code</div>
+          <div class="step-note">~1,000 lines from the G1 guide. SceneManager, RenderLayers, SpatialHash, TweenSystem, ObjectPool — everything wired and ready.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num"></div>
+        <div class="step-content">
+          <div class="step-title">Read the docs that matter to your genre</div>
+          <div class="step-note">Platformer? Start with G3 (collision) + C2 (game feel). RPG? G4 (AI) + G10 (inventory, dialogue). Top-down? G28 + G20 (camera).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ BATTLE TESTED ═══════════════════ -->
+<section class="proven" id="proven">
+  <div class="container">
+    <div class="proven-inner reveal">
+      <div>
+        <div class="section-label">Battle-Tested</div>
+        <h2>Validated on a <em>real</em> shipped project</h2>
+        <p>MonoGameStudio — a 134-file, Godot-style 2D game editor built entirely on this stack.
+          24 ECS component types, 17 editor panels, 13 undo/redo commands, macOS native integration,
+          hot reload, and a full tilemap editor with auto-tiling. It exists to prove the approach works at scale.</p>
+      </div>
+      <div class="proven-stats-grid">
+        <div class="proven-stat">
+          <div class="proven-stat-val">134</div>
+          <div class="proven-stat-desc">Source files</div>
+        </div>
+        <div class="proven-stat">
+          <div class="proven-stat-val">24</div>
+          <div class="proven-stat-desc">ECS components</div>
+        </div>
+        <div class="proven-stat">
+          <div class="proven-stat-val">17</div>
+          <div class="proven-stat-desc">Editor panels</div>
+        </div>
+        <div class="proven-stat">
+          <div class="proven-stat-val">13</div>
+          <div class="proven-stat-desc">Undo/Redo commands</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <strong>Universal 2D Engine Toolkit</strong> &mdash; MonoGame + Arch ECS + Composed Libraries
+    </div>
+    <div class="footer-right">
+      <a href="https://github.com/sbenson2/Universal-2D-Engine-Toolkit">GitHub</a>
+      <a href="#docs">Docs</a>
+      <a href="https://monogame.net">MonoGame</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script>
+// ═══════════════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════════════
+const reveals = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => revealObserver.observe(el));
+
+// ═══════════════════════════════════════════════════
+// SHADER DEMO — WebGL procedural effects
+// ═══════════════════════════════════════════════════
+const shaderSources = {
+  fire: {
+    label: 'Fire.fx',
+    code: `<span class="cm">// FBM noise + color ramp fire</span>
+<span class="kw">float</span> <span class="fn">hash</span>(<span class="kw">float2</span> p) {
+    <span class="kw">return</span> <span class="fn">frac</span>(<span class="fn">sin</span>(
+        <span class="fn">dot</span>(p, <span class="kw">float2</span>(<span class="num">127.1</span>, <span class="num">311.7</span>)))
+        * <span class="num">43758.5453</span>);
+}
+
+<span class="kw">float</span> <span class="fn">fbm</span>(<span class="kw">float2</span> p, <span class="kw">int</span> octaves) {
+    <span class="kw">float</span> value = <span class="num">0.0</span>;
+    <span class="kw">float</span> amplitude = <span class="num">0.5</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < octaves; i++) {
+        value += amplitude * <span class="fn">noise</span>(p);
+        p *= <span class="num">2.0</span>;
+        amplitude *= <span class="num">0.5</span>;
+    }
+    <span class="kw">return</span> value;
+}
+
+<span class="cm">// Scroll UV upward, sample FBM</span>
+<span class="kw">float2</span> uv = input.TexCoord;
+uv.y += Time * <span class="num">0.8</span>;
+<span class="kw">float</span> n = <span class="fn">fbm</span>(uv * <span class="num">6.0</span>, <span class="num">5</span>);
+
+<span class="cm">// Map noise → color ramp</span>
+<span class="kw">float3</span> col = <span class="fn">lerp</span>(
+    <span class="kw">float3</span>(<span class="num">0.1</span>,<span class="num">0.0</span>,<span class="num">0.0</span>),  <span class="cm">// deep red</span>
+    <span class="kw">float3</span>(<span class="num">1.0</span>,<span class="num">0.9</span>,<span class="num">0.2</span>),  <span class="cm">// bright yellow</span>
+    <span class="fn">pow</span>(n, <span class="num">1.5</span>));`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+
+      float fbm(vec2 p) {
+        float v = 0.0, a = 0.5;
+        for (int i = 0; i < 6; i++) {
+          v += a * noise(p);
+          p *= 2.0;
+          a *= 0.5;
+        }
+        return v;
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        vec2 p = uv * 5.0;
+        p.y += u_time * u_speed * 1.5;
+        p.x += sin(u_time * 0.3) * 0.5;
+        float n = fbm(p) * u_intensity;
+        n *= smoothstep(0.0, 0.4, uv.y);
+        n *= smoothstep(0.0, 0.3, 0.5 - abs(uv.x - 0.5));
+        vec3 c1 = vec3(0.1, 0.0, 0.0);
+        vec3 c2 = vec3(0.9, 0.2, 0.0);
+        vec3 c3 = vec3(1.0, 0.6, 0.1);
+        vec3 c4 = vec3(1.0, 0.95, 0.5);
+        vec3 col;
+        if (n < 0.33) col = mix(c1, c2, n / 0.33);
+        else if (n < 0.66) col = mix(c2, c3, (n - 0.33) / 0.33);
+        else col = mix(c3, c4, (n - 0.66) / 0.34);
+        col += vec3(0.6, 0.3, 0.05) * pow(n, 2.0) * 0.5;
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  water: {
+    label: 'Water.fx',
+    code: `<span class="cm">// Layered sine-wave distortion</span>
+<span class="kw">float2</span> uv = input.TexCoord;
+
+<span class="cm">// Dual-layer wave displacement</span>
+<span class="kw">float</span> wave1 = <span class="fn">sin</span>(uv.x * <span class="num">12.0</span>
+    + Time * <span class="num">2.0</span>) * <span class="num">0.015</span>;
+<span class="kw">float</span> wave2 = <span class="fn">sin</span>(uv.x * <span class="num">8.0</span>
+    - Time * <span class="num">1.5</span>) * <span class="num">0.02</span>;
+uv.y += wave1 + wave2;
+
+<span class="cm">// Caustics from scrolling textures</span>
+<span class="kw">float</span> c1 = <span class="fn">tex2D</span>(CausticsTex,
+    uv * <span class="num">3.0</span> + Time * <span class="kw">float2</span>(<span class="num">0.02</span>, <span class="num">0.03</span>)).r;
+<span class="kw">float</span> c2 = <span class="fn">tex2D</span>(CausticsTex,
+    uv * <span class="num">4.0</span> - Time * <span class="kw">float2</span>(<span class="num">0.03</span>, <span class="num">0.01</span>)).r;
+<span class="kw">float</span> caustics = <span class="fn">min</span>(c1, c2);
+
+<span class="cm">// Shoreline foam band</span>
+<span class="kw">float</span> foam = <span class="fn">smoothstep</span>(
+    <span class="num">0.1</span>, <span class="num">0.0</span>, shoreDist)
+    * <span class="fn">step</span>(<span class="num">0.6</span>,
+    <span class="fn">noise</span>(uv * <span class="num">20.0</span> + Time));`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x),
+                   mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        float t = u_time * u_speed;
+        vec2 p = uv;
+        p.y += sin(uv.x * 12.0 + t * 2.0) * 0.015 * u_intensity;
+        p.x += sin(uv.y * 8.0 - t * 1.5) * 0.02 * u_intensity;
+        float c1 = noise(p * 8.0 + vec2(t * 0.3, t * 0.4));
+        float c2 = noise(p * 10.0 - vec2(t * 0.4, t * 0.2));
+        float caustics = min(c1, c2);
+        float depth = noise(uv * 3.0 + t * 0.1);
+        vec3 shallow = vec3(0.15, 0.55, 0.7);
+        vec3 deep = vec3(0.03, 0.12, 0.25);
+        vec3 col = mix(deep, shallow, depth * 0.7);
+        col += vec3(0.3, 0.5, 0.6) * caustics * 0.4 * u_intensity;
+        float foam = smoothstep(0.62, 0.65, noise(uv * 15.0 + t * 0.5));
+        float foamMask = smoothstep(0.3, 0.5, sin(uv.x * 3.14 + t * 0.3) * 0.5 + 0.5);
+        col += vec3(0.8, 0.9, 1.0) * foam * foamMask * 0.3;
+        float specular = pow(max(0.0, noise(uv * 20.0 + t)), 8.0) * 0.15;
+        col += vec3(specular);
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  wind: {
+    label: 'Wind.fx',
+    code: `<span class="cm">// UV displacement anchored at base</span>
+<span class="kw">float2</span> uv = input.TexCoord;
+
+<span class="cm">// Anchor at sprite bottom (y=1)</span>
+<span class="kw">float</span> height = <span class="num">1.0</span> - uv.y;
+
+<span class="cm">// Phase-offset traveling wave</span>
+<span class="kw">float</span> wave = <span class="fn">sin</span>(
+    uv.x * <span class="num">3.0</span>
+    + Time * WindSpeed
+    + height * <span class="num">2.0</span>)
+    * height * height
+    * WindStrength;
+
+<span class="cm">// Apply horizontal displacement</span>
+uv.x += wave;
+
+<span class="cm">// Stardew-style gust shimmer</span>
+<span class="kw">float</span> gust = <span class="fn">smoothstep</span>(
+    <span class="num">0.7</span>, <span class="num">1.0</span>,
+    <span class="fn">sin</span>(Time * <span class="num">0.5</span>
+    + uv.x * <span class="num">10.0</span>));
+uv.x += gust * <span class="num">0.02</span> * height;`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x),
+                   mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        float t = u_time * u_speed;
+        float grassH = 0.35;
+        float skyGrad = smoothstep(0.0, 0.65, uv.y);
+        vec3 skyTop = vec3(0.12, 0.18, 0.08);
+        vec3 skyBot = vec3(0.2, 0.35, 0.15);
+        vec3 col = mix(skyBot, skyTop, skyGrad);
+        if (uv.y > 1.0 - grassH) {
+          float gy = (uv.y - (1.0 - grassH)) / grassH;
+          float height = 1.0 - gy;
+          float wave = sin(uv.x * 8.0 + t * 2.5 + height * 4.0) * height * height * 0.06 * u_intensity;
+          float gust = smoothstep(0.7, 1.0, sin(t * 0.5 + uv.x * 10.0)) * 0.03 * height;
+          vec2 gp = vec2(uv.x + wave + gust, gy);
+          float n = noise(gp * vec2(30.0, 10.0));
+          float blade = smoothstep(0.3, 0.5, n) * height;
+          vec3 grassDark = vec3(0.1, 0.3, 0.05);
+          vec3 grassLight = vec3(0.3, 0.65, 0.15);
+          vec3 grassTip = vec3(0.5, 0.8, 0.2);
+          vec3 gc = mix(grassDark, grassLight, blade);
+          gc = mix(gc, grassTip, pow(height, 2.0) * 0.6);
+          float shimmer = pow(max(0.0, sin(uv.x * 40.0 + t * 3.0)), 12.0) * height * 0.2;
+          gc += vec3(0.2, 0.3, 0.05) * shimmer;
+          col = mix(col, gc, smoothstep(0.0, 0.05, gy));
+        }
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  lightning: {
+    label: 'Lightning.fx',
+    code: `<span class="cm">// Zigzag bolt with exponential glow</span>
+<span class="kw">float2</span> boltPos = <span class="kw">float2</span>(<span class="num">0.5</span>, <span class="num">0.0</span>);
+<span class="kw">float</span> minDist = <span class="num">999.0</span>;
+
+<span class="cm">// Walk down the bolt path</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < Segments; i++) {
+    <span class="kw">float</span> t = (<span class="kw">float</span>)i / Segments;
+    boltPos.y = t;
+    boltPos.x += <span class="fn">hash</span>(
+        <span class="kw">float2</span>(t, <span class="fn">floor</span>(Time * <span class="num">8.0</span>)))
+        * <span class="num">0.3</span> - <span class="num">0.15</span>;
+    <span class="kw">float</span> d = <span class="fn">distance</span>(uv, boltPos);
+    minDist = <span class="fn">min</span>(minDist, d);
+}
+
+<span class="cm">// Exponential glow falloff</span>
+<span class="kw">float</span> glow = <span class="fn">exp</span>(-minDist * <span class="num">40.0</span>);
+<span class="kw">float</span> core = <span class="fn">exp</span>(-minDist * <span class="num">200.0</span>);
+
+<span class="kw">float3</span> col = <span class="kw">float3</span>(<span class="num">0.5</span>,<span class="num">0.3</span>,<span class="num">1.0</span>)
+    * glow + <span class="kw">float3</span>(<span class="num">1.0</span>) * core;`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        float t = u_time * u_speed;
+        vec3 col = vec3(0.02, 0.01, 0.06);
+        float flash = floor(t * 8.0);
+        for (int b = 0; b < 3; b++) {
+          float boltX = 0.25 + float(b) * 0.25 + sin(float(b) * 2.5) * 0.1;
+          float minDist = 999.0;
+          vec2 prev = vec2(boltX, 0.0);
+          for (int i = 1; i <= 20; i++) {
+            float s = float(i) / 20.0;
+            float offset = (hash(vec2(s * 10.0, flash + float(b))) - 0.5) * 0.2 * u_intensity;
+            vec2 curr = vec2(boltX + offset, s);
+            vec2 pa = uv - prev;
+            vec2 ba = curr - prev;
+            float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+            float d = length(pa - ba * h);
+            minDist = min(minDist, d);
+            prev = curr;
+          }
+          float glow = exp(-minDist * 35.0) * 0.8;
+          float core = exp(-minDist * 180.0);
+          float branch = 0.0;
+          for (int j = 0; j < 4; j++) {
+            float by = hash(vec2(float(j), flash + float(b))) * 0.7 + 0.1;
+            float bx = boltX + (hash(vec2(by * 10.0, flash + float(b))) - 0.5) * 0.15;
+            float bd = length(uv - vec2(bx, by));
+            branch += exp(-bd * 25.0) * 0.2;
+          }
+          col += vec3(0.4, 0.2, 1.0) * glow + vec3(0.8, 0.7, 1.0) * core + vec3(0.3, 0.15, 0.7) * branch;
+        }
+        float ambient = exp(-length(uv - vec2(0.5)) * 1.5) * 0.08;
+        col += vec3(0.2, 0.1, 0.4) * ambient;
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  ice: {
+    label: 'Ice.fx',
+    code: `<span class="cm">// Voronoi crystal pattern</span>
+<span class="kw">float2</span> p = uv * CellScale;
+<span class="kw">float2</span> ip = <span class="fn">floor</span>(p);
+<span class="kw">float</span> minDist = <span class="num">1.0</span>;
+<span class="kw">float</span> secondDist = <span class="num">1.0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> y = <span class="num">-1</span>; y <= <span class="num">1</span>; y++)
+<span class="kw">for</span> (<span class="kw">int</span> x = <span class="num">-1</span>; x <= <span class="num">1</span>; x++) {
+    <span class="kw">float2</span> neighbor = <span class="kw">float2</span>(x, y);
+    <span class="kw">float2</span> point = <span class="fn">hash2</span>(ip + neighbor);
+    <span class="kw">float</span> d = <span class="fn">distance</span>(
+        <span class="fn">frac</span>(p), neighbor + point);
+    <span class="kw">if</span> (d < minDist) {
+        secondDist = minDist;
+        minDist = d;
+    } <span class="kw">else if</span> (d < secondDist) {
+        secondDist = d;
+    }
+}
+
+<span class="cm">// Edge glow on cell boundaries</span>
+<span class="kw">float</span> edge = secondDist - minDist;
+<span class="kw">float</span> crack = <span class="fn">smoothstep</span>(
+    <span class="num">0.0</span>, <span class="num">0.05</span>, edge);`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      vec2 hash2(vec2 p) {
+        p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+        return fract(sin(p) * 43758.5453);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        float t = u_time * u_speed * 0.3;
+        vec2 p = uv * 6.0;
+        vec2 ip = floor(p);
+        float minD = 1.0, secD = 1.0;
+        vec2 closestPt = vec2(0.0);
+        for (int y = -1; y <= 1; y++)
+        for (int x = -1; x <= 1; x++) {
+          vec2 nb = vec2(float(x), float(y));
+          vec2 pt = hash2(ip + nb);
+          pt = 0.5 + 0.4 * sin(t + 6.28 * pt);
+          float d = distance(fract(p), nb + pt);
+          if (d < minD) { secD = minD; minD = d; closestPt = pt; }
+          else if (d < secD) { secD = d; }
+        }
+        float edge = secD - minD;
+        float crack = smoothstep(0.0, 0.04, edge);
+        float cellShade = minD * 0.8;
+        vec3 iceDeep = vec3(0.05, 0.15, 0.3);
+        vec3 iceMid = vec3(0.2, 0.5, 0.7);
+        vec3 iceLight = vec3(0.6, 0.85, 0.95);
+        vec3 col = mix(iceDeep, iceMid, cellShade * u_intensity);
+        col = mix(iceLight * 1.2, col, crack);
+        float sparkle = pow(max(0.0, sin(closestPt.x * 100.0 + t * 5.0) * sin(closestPt.y * 80.0 + t * 3.0)), 20.0);
+        col += vec3(0.5, 0.7, 1.0) * sparkle * 0.4;
+        float frost = smoothstep(0.6, 0.0, length(uv - 0.5));
+        col = mix(col, col * 1.15, frost * 0.3);
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  earth: {
+    label: 'Earth.fx',
+    code: `<span class="cm">// Procedural ground cracks (Voronoi)</span>
+<span class="kw">float2</span> p = uv * <span class="num">8.0</span>;
+
+<span class="cm">// Voronoi cell distance</span>
+<span class="kw">float</span> cellDist = <span class="fn">voronoi</span>(p).x;
+
+<span class="cm">// Splatmap terrain blending</span>
+<span class="kw">float</span> h = <span class="fn">tex2D</span>(HeightMap, uv).r;
+<span class="kw">float3</span> dirt = <span class="kw">float3</span>(<span class="num">0.4</span>,<span class="num">0.28</span>,<span class="num">0.15</span>);
+<span class="kw">float3</span> rock = <span class="kw">float3</span>(<span class="num">0.35</span>,<span class="num">0.33</span>,<span class="num">0.3</span>);
+<span class="kw">float3</span> sand = <span class="kw">float3</span>(<span class="num">0.76</span>,<span class="num">0.7</span>,<span class="num">0.5</span>);
+
+<span class="cm">// Height-based blending</span>
+<span class="kw">float3</span> terrain = <span class="fn">lerp</span>(
+    <span class="fn">lerp</span>(sand, dirt, <span class="fn">smoothstep</span>(
+        <span class="num">0.3</span>, <span class="num">0.5</span>, h)),
+    rock, <span class="fn">smoothstep</span>(<span class="num">0.6</span>, <span class="num">0.8</span>, h));
+
+<span class="cm">// Impact shockwave ring</span>
+<span class="kw">float</span> ring = <span class="fn">abs</span>(dist - Radius)
+    * <span class="num">20.0</span>;
+ring = <span class="fn">exp</span>(-ring * ring);`,
+    frag: `
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform float u_speed;
+      uniform float u_intensity;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x),
+                   mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+      }
+
+      vec2 hash2(vec2 p) {
+        p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+        return fract(sin(p) * 43758.5453);
+      }
+
+      float voronoi(vec2 p) {
+        vec2 ip = floor(p);
+        float minD = 1.0;
+        for (int y = -1; y <= 1; y++)
+        for (int x = -1; x <= 1; x++) {
+          vec2 nb = vec2(float(x), float(y));
+          vec2 pt = hash2(ip + nb);
+          float d = distance(fract(p), nb + pt);
+          minD = min(minD, d);
+        }
+        return minD;
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution;
+        uv.y = 1.0 - uv.y;
+        float t = u_time * u_speed;
+        float h = noise(uv * 4.0) * 0.5 + noise(uv * 8.0) * 0.3 + noise(uv * 16.0) * 0.2;
+        vec3 sand = vec3(0.76, 0.7, 0.5);
+        vec3 dirt = vec3(0.4, 0.28, 0.15);
+        vec3 rock = vec3(0.35, 0.33, 0.3);
+        vec3 darkRock = vec3(0.2, 0.18, 0.16);
+        vec3 col;
+        if (h < 0.35) col = mix(sand, dirt, h / 0.35);
+        else if (h < 0.6) col = mix(dirt, rock, (h - 0.35) / 0.25);
+        else col = mix(rock, darkRock, (h - 0.6) / 0.4);
+        float cracks = voronoi(uv * 12.0 * u_intensity);
+        float crackLine = smoothstep(0.0, 0.06, cracks);
+        col *= mix(0.4, 1.0, crackLine);
+        float pulse = fract(t * 0.3);
+        vec2 center = vec2(0.5 + sin(t * 0.7) * 0.2, 0.5 + cos(t * 0.5) * 0.2);
+        float dist = length(uv - center);
+        float ring = abs(dist - pulse * 0.5) * 20.0;
+        ring = exp(-ring * ring) * smoothstep(0.5, 0.0, pulse);
+        col += vec3(0.6, 0.35, 0.1) * ring * u_intensity;
+        float ao = noise(uv * 20.0) * 0.1;
+        col -= ao * 0.15;
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  }
+};
+
+// ═══════ WebGL Setup ═══════
+const canvas = document.getElementById('shaderCanvas');
+const gl = canvas.getContext('webgl', { antialias: false, preserveDrawingBuffer: false });
+let currentShader = 'fire';
+let program = null;
+let startTime = performance.now();
+let speed = 1.0;
+let intensity = 1.0;
+
+const vsSource = `
+  attribute vec2 a_position;
+  void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
+`;
+
+function createShader(type, source) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, source);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(s));
+    gl.deleteShader(s);
+    return null;
+  }
+  return s;
+}
+
+function createProgram(fsSource) {
+  if (program) gl.deleteProgram(program);
+  const vs = createShader(gl.VERTEX_SHADER, vsSource);
+  const fs = createShader(gl.FRAGMENT_SHADER, fsSource);
+  if (!vs || !fs) return null;
+  const p = gl.createProgram();
+  gl.attachShader(p, vs);
+  gl.attachShader(p, fs);
+  gl.linkProgram(p);
+  gl.deleteShader(vs);
+  gl.deleteShader(fs);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(p));
+    return null;
+  }
+  return p;
+}
+
+// Fullscreen quad
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+function switchShader(name) {
+  currentShader = name;
+  const data = shaderSources[name];
+  program = createProgram(data.frag);
+  document.getElementById('shaderCode').innerHTML = data.code;
+  document.getElementById('shaderLabel').textContent = data.label;
+
+  // Update tab styling
+  document.querySelectorAll('.shader-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-shader="${name}"]`).classList.add('active');
+}
+
+// FPS counter
+let frameCount = 0;
+let lastFpsTime = performance.now();
+
+function render() {
+  const now = performance.now();
+  frameCount++;
+  if (now - lastFpsTime > 500) {
+    const fps = Math.round(frameCount / ((now - lastFpsTime) / 1000));
+    document.getElementById('fpsCounter').textContent = fps + ' fps';
+    frameCount = 0;
+    lastFpsTime = now;
+  }
+
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.floor(rect.width * dpr);
+  const h = Math.floor(rect.height * dpr);
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w;
+    canvas.height = h;
+  }
+
+  if (!program) { requestAnimationFrame(render); return; }
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.useProgram(program);
+
+  const posLoc = gl.getAttribLocation(program, 'a_position');
+  gl.enableVertexAttribArray(posLoc);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+  const timeLoc = gl.getUniformLocation(program, 'u_time');
+  const resLoc = gl.getUniformLocation(program, 'u_resolution');
+  const speedLoc = gl.getUniformLocation(program, 'u_speed');
+  const intLoc = gl.getUniformLocation(program, 'u_intensity');
+
+  gl.uniform1f(timeLoc, (now - startTime) / 1000.0);
+  gl.uniform2f(resLoc, canvas.width, canvas.height);
+  gl.uniform1f(speedLoc, speed);
+  gl.uniform1f(intLoc, intensity);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  requestAnimationFrame(render);
+}
+
+// Tab clicks
+document.querySelectorAll('.shader-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchShader(tab.dataset.shader));
+});
+
+// Sliders
+document.getElementById('speedSlider').addEventListener('input', (e) => {
+  speed = parseFloat(e.target.value);
+  document.getElementById('speedValue').textContent = speed.toFixed(1) + 'x';
+});
+document.getElementById('intensitySlider').addEventListener('input', (e) => {
+  intensity = parseFloat(e.target.value);
+  document.getElementById('intensityValue').textContent = intensity.toFixed(1) + 'x';
+});
+
+// Init
+switchShader('fire');
+requestAnimationFrame(render);
+
+// ═══════════════════════════════════════════════════
+// HERO BACKGROUND CANVAS — subtle particle field
+// ═══════════════════════════════════════════════════
+const heroCanvas = document.getElementById('heroCanvas');
+const hctx = heroCanvas.getContext('2d');
+
+const particles = [];
+const PARTICLE_COUNT = 80;
+
+function initHero() {
+  heroCanvas.width = window.innerWidth;
+  heroCanvas.height = window.innerHeight;
+  particles.length = 0;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * heroCanvas.width,
+      y: Math.random() * heroCanvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -Math.random() * 0.5 - 0.1,
+      size: Math.random() * 2 + 0.5,
+      opacity: Math.random() * 0.15 + 0.03,
+      hue: Math.random() > 0.7 ? 20 : 15,
+    });
+  }
+}
+
+function drawHero() {
+  hctx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+  // Radial glow
+  const grad = hctx.createRadialGradient(
+    heroCanvas.width * 0.2, heroCanvas.height * 0.7,
+    0,
+    heroCanvas.width * 0.2, heroCanvas.height * 0.7,
+    heroCanvas.width * 0.6
+  );
+  grad.addColorStop(0, 'rgba(255, 80, 30, 0.04)');
+  grad.addColorStop(1, 'rgba(255, 80, 30, 0)');
+  hctx.fillStyle = grad;
+  hctx.fillRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+  for (const p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.y < -10) { p.y = heroCanvas.height + 10; p.x = Math.random() * heroCanvas.width; }
+    if (p.x < -10) p.x = heroCanvas.width + 10;
+    if (p.x > heroCanvas.width + 10) p.x = -10;
+
+    hctx.beginPath();
+    hctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    hctx.fillStyle = `hsla(${p.hue}, 90%, 55%, ${p.opacity})`;
+    hctx.fill();
+  }
+
+  requestAnimationFrame(drawHero);
+}
+
+initHero();
+drawHero();
+window.addEventListener('resize', initHero);
+</script>
+
+</body>
+</html>
