@@ -1,3 +1,6 @@
+# G28 — 3/4 Top-Down Perspective
+> **Category:** Guide · **Related:** [G2 Rendering & Graphics](./G2_rendering_and_graphics.md) · [G3 Physics & Collision](./G3_physics_and_collision.md) · [G20 Camera Systems](./G20_camera_systems.md) · [G22 Parallax & Depth Layers](./G22_parallax_depth_layers.md)
+
 # Building games in three-quarter perspective: a technical deep dive
 
 **The 3/4 top-down view — used by Stardew Valley, Chrono Trigger, CrossCode, and dozens of landmark RPGs — relies on a surprisingly consistent set of art conventions and engine patterns.** Understanding these patterns before writing code saves months of refactoring. The core insight: art decisions about tile size, sprite proportions, and layering directly dictate your render pipeline, collision system, and entity architecture. This report distills the technical approaches of shipped games into actionable patterns for a C#/MonoGame + Arch ECS stack.

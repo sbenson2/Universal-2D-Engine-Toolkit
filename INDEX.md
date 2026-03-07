@@ -54,8 +54,8 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
 | Doc | What's In It |
 |-----|-------------|
 | [E1 — Architecture Overview](./E/E1_architecture_overview.md) | Why composed libraries, why Arch-only ECS, the core philosophy |
-| E2 — Why Nez Was Dropped *(planned)* | The problem, feature audit, replacement map, migration path |
-| E3 — Engine Alternatives Evaluated *(planned)* | Murder, FlatRedBall, Monofoxe — why none fit |
+| [E2 — Why Nez Was Dropped](./E/E2_nez_dropped.md) | The problem, feature audit, replacement map, migration path |
+| [E3 — Engine Alternatives Evaluated](./E/E3_engine_alternatives.md) | Murder, FlatRedBall, Monofoxe — why none fit |
 | [E4 — Solo Project Management](./E/E4_project_management.md) | Vertical slices, scope, version control, build automation, tech debt |
 | [E5 — AI-Assisted Dev Workflow](./E/E5_ai_workflow.md) | Structuring code for AI, what AI is good/bad at, review checklist |
 | [E6 — Game Design Fundamentals](./E/E6_game_design_fundamentals.md) | MDA framework, design pillars, player motivation, feedback loops, pacing, iteration, scope |

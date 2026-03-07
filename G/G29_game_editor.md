@@ -1,3 +1,6 @@
+# G29 — Game Editor
+> **Category:** Guide · **Related:** [G16 Debugging](./G16_debugging.md) · [G30 Game Feel Tooling](./G30_game_feel_tooling.md) · [E1 Architecture Overview](../E/E1_architecture_overview.md)
+
 # Replicating Godot's 2D editor in MonoGame/C#
 
 **ImGui.NET with docking is the proven path to building a Godot-class 2D editor on MonoGame + Arch ECS, requiring roughly 10–12 weeks for a minimum viable editor and 20–24 weeks for a productive one.** Godot's editor comprises approximately 15 major subsystems — from dockable panels and a reflection-driven inspector to a full tilemap editor and animation timeline — most of which have viable C# implementation strategies using existing libraries. The Murder Engine (built on FNA + ImGui + ECS) demonstrates this approach works in production. This document catalogs every significant Godot 2D editor feature and maps it to a concrete MonoGame/C# implementation path with complexity estimates.

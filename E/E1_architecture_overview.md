@@ -1,11 +1,11 @@
 # E1 — Architecture Overview
-> **Category:** Explanation · **Related:** [R1 Library Stack](../R/R1_library_stack.md) · [E2 Why Nez Was Dropped](./E2_why_nez_was_dropped.md) · [G1 Custom Code Recipes](../G/G1_custom_code_recipes.md)
+> **Category:** Explanation · **Related:** [R1 Library Stack](../R/R1_library_stack.md) · [E2 Why Nez Was Dropped](./E2_nez_dropped.md) · [G1 Custom Code Recipes](../G/G1_custom_code_recipes.md)
 
 ---
 
 ## Core Philosophy: Library Composition, Not a Monolith
 
-The single most important architectural decision: **do not depend on a monolith framework**. When a monolith's sole maintainer leaves, everything dies at once (this is exactly what happened with Nez — see [E2](./E2_why_nez_was_dropped.md)).
+The single most important architectural decision: **do not depend on a monolith framework**. When a monolith's sole maintainer leaves, everything dies at once (this is exactly what happened with Nez — see [E2](./E2_nez_dropped.md)).
 
 The correct architecture is a **composed stack of focused, actively maintained libraries**, each replaceable independently. If one library dies, you swap that one piece — not your entire game's foundation.
 
