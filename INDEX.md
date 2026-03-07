@@ -6,11 +6,11 @@
 
 <div class="grid-cards" markdown>
 <div class="card" markdown>
-<span class="card-number">42</span>
+<span class="card-number">43</span>
 <span class="card-label">Documents</span>
 </div>
 <div class="card" markdown>
-<span class="card-number">29</span>
+<span class="card-number">30</span>
 <span class="card-label">Step-by-step Guides</span>
 </div>
 <div class="card" markdown>
@@ -95,6 +95,7 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
 | [G27 — Shaders & Visual Effects](./G/G27_shaders_and_effects.md) | HLSL pipeline, fire, water, wind, earth, lightning, ice shaders, post-processing, performance |
 | [G28 — 3/4 Top-Down Perspective](./G/G28_top_down_perspective.md) | Tile conventions, Y-sort rendering, collision shapes, depth layers, sprite proportions, MonoGame+Arch patterns |
 | [G29 — Game Editor](./G/G29_game_editor.md) | Replicating Godot's 2D editor in MonoGame/C#, ImGui.NET docking, inspector, tilemap editor, scene serialization |
+| [G30 — Game Feel Tooling](./G/G30_game_feel_tooling.md) | Data-driven feel profiles, ImGui tuning panel, visual overlays, ghost/replay, frame advance, curve visualizer, presets |
 
 ### Catalog (plan your game)
 | Doc | What's In It |
@@ -133,7 +134,7 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
     - Display → [G19](./G/G19_display_resolution_viewports.md) · Camera → [G20](./G/G20_camera_systems.md) · Coordinates → [G21](./G/G21_coordinate_systems.md)
     - Parallax → [G22](./G/G22_parallax_depth_layers.md) · Particles → [G23](./G/G23_particles.md) · Window → [G24](./G/G24_window_display_management.md)
     - Safe Areas → [G25](./G/G25_safe_areas_adaptive_layout.md) · Resources → [G26](./G/G26_resource_loading_caching.md)
-    - Top-Down → [G28](./G/G28_top_down_perspective.md) · Editor → [G29](./G/G29_game_editor.md)
+    - Top-Down → [G28](./G/G28_top_down_perspective.md) · Editor → [G29](./G/G29_game_editor.md) · Feel Tooling → [G30](./G/G30_game_feel_tooling.md)
 
 ??? question "I want to level up my code quality and patterns"
 

@@ -100,6 +100,7 @@ Structure the file with clear markdown headers to prevent instruction bleeding b
 ## What AI Is Bad At (Write It Yourself)
 
 - Core game loop and fixed timestep integration → [G15](../G/G15_game_loop.md)
+- Game feel tuning (but AI **can** scaffold the tooling that helps you tune) → [G30](../G/G30_game_feel_tooling.md)
 - Physics and collision resolution edge cases → [G3](../G/G3_physics_and_collision.md)
 - State machine transitions with subtle timing requirements
 - Performance-critical inner loops (measure, don't trust AI's optimization instincts)
