@@ -1,0 +1,11 @@
+# Fix GitHub language detection
+# Mark landing page as vendored so it doesn't skew language stats
+landing/** linguist-vendored
+
+# Mark documentation
+*.md linguist-documentation
+
+# Ensure C# is detected
+*.cs linguist-language=C#
+*.csproj linguist-language=C#
+*.fx linguist-language=HLSL

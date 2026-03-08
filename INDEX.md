@@ -7,7 +7,7 @@
 
 <div class="grid-cards" markdown>
 <div class="card" markdown>
-<span class="card-number">92</span>
+<span class="card-number">91</span>
 <span class="card-label">Documents</span>
 </div>
 <div class="card" markdown>
@@ -62,7 +62,6 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
 | [E5 — AI-Assisted Dev Workflow](./E/E5_ai_workflow.md) | Structuring code for AI, what AI is good/bad at, review checklist |
 | [E6 — Game Design Fundamentals](./E/E6_game_design_fundamentals.md) | MDA framework, design pillars, player motivation, feedback loops, pacing, iteration, scope |
 | [E7 — Emergent Puzzle Design](./E/E7_emergent_puzzle_design.md) | Emergent vs contrived, BotW chemistry engine, WFC, procedural generation, combinatorial mechanics |
-| [E8 — MonoGameStudio Post-Mortem](./E/E8_monogamestudio_postmortem.md) | What was built (134 files), tech stack decisions, what worked/didn't, tool-building trap lesson, full file map |
 | [E9 — Solo Dev Playbook](./E/E9_solo_dev_playbook.md) | AI+ECS synergies, realistic productivity data, AI art pipeline, goal hierarchy, Kanban, scope creep, case studies, decision journal, planning sessions |
 
 ### Guides (build things)
