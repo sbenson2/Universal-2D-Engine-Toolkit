@@ -1,4 +1,7 @@
 # G28 — 3/4 Top-Down Perspective
+
+![](../img/physics.png)
+
 > **Category:** Guide · **Related:** [G2 Rendering & Graphics](./G2_rendering_and_graphics.md) · [G3 Physics & Collision](./G3_physics_and_collision.md) · [G20 Camera Systems](./G20_camera_systems.md) · [G22 Parallax & Depth Layers](./G22_parallax_depth_layers.md)
 
 # Building games in three-quarter perspective: a technical deep dive

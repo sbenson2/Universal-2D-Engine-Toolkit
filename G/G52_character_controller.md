@@ -1,5 +1,8 @@
 # G52 — 2D Platformer Character Controller
 
+![](../img/physics.png)
+
+
 > **Category:** Guide · **Related:** [G3 Physics & Collision](./G3_physics_and_collision.md) · [C2 Game Feel & Genre Craft](../C/C2_game_feel_and_genre_craft.md) · [G30 Game Feel Tooling](./G30_game_feel_tooling.md) · [G7 Input Handling](./G7_input_handling.md) · [G53 Side-Scrolling Perspective](./G53_side_scrolling.md)
 
 ---

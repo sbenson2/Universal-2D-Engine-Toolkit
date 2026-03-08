@@ -1,4 +1,7 @@
 # G29 — Game Editor
+
+![](../img/topdown.png)
+
 > **Category:** Guide · **Related:** [G16 Debugging](./G16_debugging.md) · [G30 Game Feel Tooling](./G30_game_feel_tooling.md) · [E1 Architecture Overview](../E/E1_architecture_overview.md)
 
 # Replicating Godot's 2D editor in MonoGame/C#

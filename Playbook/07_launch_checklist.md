@@ -1,5 +1,8 @@
 # 11 — Launch Checklist
 
+![](../img/networking.png)
+
+
 > **Your game is done (or close enough). Now what?**
 > This is the full launch checklist — from first store page to post-launch survival. It's written for solo devs and small teams shipping their first game on Steam, with notes for itch.io and other platforms.
 

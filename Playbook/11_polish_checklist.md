@@ -1,5 +1,8 @@
 # 15 · Polish & Juice Checklist
 
+![](../img/topdown.png)
+
+
 > *"Juice is the non-essential visual, audio, and haptic feedback that makes a game **feel** incredible."*
 
 This checklist is your polish-phase companion. Work through it systematically after your core gameplay loop is solid. Every checkbox is a small thing on its own — stacked together, they're the difference between "functional prototype" and "this feels amazing."

@@ -1,5 +1,8 @@
 # 08 — Playtesting Guide
 
+![](../img/networking.png)
+
+
 > *"You can't read the label from inside the bottle."*
 
 You built the game. You know every mechanic, every shortcut, every hidden path. That's exactly why you're the worst person to judge whether it's fun. This guide gives you a structured, repeatable process for playtesting — from solo self-tests to public betas — so you ship a game people actually enjoy, not just one you *think* works.

@@ -1,5 +1,8 @@
 # 19 — Post-Mortem Template
 
+![](../img/networking.png)
+
+
 > *You shipped a game. Or you walked away from one. Either way, you learned something — but only if you write it down.*
 >
 > *This is the most important document in the playbook. Not because it's the longest, but because it's the one that makes your **next** game better. Be honest. Be specific. Future-you is reading this.*

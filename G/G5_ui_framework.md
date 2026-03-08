@@ -1,4 +1,7 @@
 # G5 — UI Framework
+
+![](../img/ui-rpg.png)
+
 > **Category:** Guide · **Related:** [R1 Library Stack](../R/R1_library_stack.md) · [C1 Genre Reference](../C/C1_genre_reference.md)
 
 > Complete setup and usage guide for Gum.MonoGame — the official MonoGame UI recommendation.

@@ -1,4 +1,7 @@
 # G33 — Profiling & Optimization Workflow
+
+![](../img/roguelike.png)
+
 > **Category:** Guide · **Related:** [G13 C# Performance](./G13_csharp_performance.md) · [G15 Game Loop](./G15_game_loop.md) · [G16 Debugging](./G16_debugging.md) · [G2 Rendering & Graphics](./G2_rendering_and_graphics.md)
 
 > Systematic approach to finding and fixing performance problems in MonoGame + Arch ECS games. Measure first, optimize second, verify always.

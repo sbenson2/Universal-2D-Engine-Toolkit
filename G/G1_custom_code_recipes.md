@@ -1,4 +1,7 @@
 # G1 — Custom Code Recipes
+
+![](../img/topdown.png)
+
 > **Category:** Guide · **Related:** [E1 Architecture Overview](../E/E1_architecture_overview.md) · [R1 Library Stack](../R/R1_library_stack.md) · [R3 Project Structure](../R/R3_project_structure.md) · [G30 Game Feel Tooling](./G30_game_feel_tooling.md)
 
 ---

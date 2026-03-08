@@ -36,6 +36,9 @@ jobs:
           for dir in R E G C Playbook examples; do
             cp -R "$dir" docs/
           done
+          # Ensure images are available
+          mkdir -p docs/img
+          cp -R docs/img/* docs/img/ 2>/dev/null || true
 
       - name: Build docs site
         run: mkdocs build

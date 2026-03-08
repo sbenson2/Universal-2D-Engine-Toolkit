@@ -1,4 +1,7 @@
 # G6 — Audio
+
+![](../img/ui-rpg.png)
+
 > **Category:** Guide · **Related:** [R1 Library Stack](../R/R1_library_stack.md) · [C1 Genre Reference](../C/C1_genre_reference.md)
 
 > MonoGame built-in audio and FMOD via FmodForFoxes — setup, integration, and advanced features.

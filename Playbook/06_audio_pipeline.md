@@ -1,5 +1,8 @@
 # 10 — Audio Production Pipeline
 
+![](../img/rpg.png)
+
+
 > Audio is half the experience. A game with great art and no audio feels like a silent film nobody asked for.
 
 Most solo devs treat audio as an afterthought — something to bolt on the week before release. That's a mistake. Audio is **game feel** (see [G30 — Game Feel Tooling](../G/G30_game_feel_tooling.md)). The satisfying *thwack* of a hit, the little *ding* when you pick up a coin, the ambient hum of a dungeon — these are what make a game feel *alive*.

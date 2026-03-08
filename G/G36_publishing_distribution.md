@@ -1,4 +1,7 @@
 # G36 — Publishing & Distribution
+
+![](../img/networking.png)
+
 > **Category:** Guide · **Related:** [G32 Deployment & Platform Builds](./G32_deployment_platform_builds.md) · [E4 Solo Project Management](../E/E4_project_management.md) · [E9 Solo Dev Playbook](../E/E9_solo_dev_playbook.md)
 
 > **Stack:** MonoGame · .NET · Multi-platform

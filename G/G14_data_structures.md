@@ -1,4 +1,7 @@
 # G14 — Data Structures
+
+![](../img/physics.png)
+
 > **Category:** Guide · **Related:** [G13 C# Performance](./G13_csharp_performance.md) · [G3 Physics & Collision](./G3_physics_and_collision.md)
 
 > Game-specific data structures beyond standard collections — spatial queries, ring buffers, object pools, bit manipulation, and ECS-friendly memory layouts with full C# implementations.

@@ -1,4 +1,7 @@
 # G24 — Window & Display Management
+
+![](../img/nature.png)
+
 > **Category:** Guide · **Related:** [G19 Display & Resolution](./G19_display_resolution_viewports.md) · [G15 Game Loop](./G15_game_loop.md) · [G25 Safe Areas](./G25_safe_areas_adaptive_layout.md) · [R3 Project Structure](../R/R3_project_structure.md)
 
 ---

@@ -1,5 +1,8 @@
 # G40 — Pathfinding
 
+![](../img/tilemap.png)
+
+
 > **Category:** Guide · **Related:** [G4 AI Systems](./G4_ai_systems.md) · [G14 Data Structures](./G14_data_structures.md) · [G3 Physics & Collision](./G3_physics_and_collision.md) · [G37 Tilemap Systems](./G37_tilemap_systems.md)
 
 Pathfinding is the backbone of any AI that needs to move through a world. This guide covers everything from basic A* on a grid to flow fields, hierarchical search, navigation meshes, and full ECS integration with BrainAI and Arch.

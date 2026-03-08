@@ -1,4 +1,7 @@
 # G17 — Testing
+
+![](../img/networking.png)
+
 > **Category:** Guide · **Related:** [G11 Programming Principles](./G11_programming_principles.md) · [G16 Debugging](./G16_debugging.md)
 
 > Comprehensive testing guide for MonoGame + Arch ECS projects covering unit tests, ECS system tests, integration patterns, fixtures, and performance benchmarking.

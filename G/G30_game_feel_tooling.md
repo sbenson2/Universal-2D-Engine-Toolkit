@@ -1,4 +1,7 @@
 # G30 — Game Feel Tooling
+
+![](../img/topdown.png)
+
 > **Category:** Guide · **Related:** [C2 Game Feel & Genre Craft](../C/C2_game_feel_and_genre_craft.md) · [G1 Custom Code Recipes](./G1_custom_code_recipes.md) · [G16 Debugging](./G16_debugging.md) · [G20 Camera Systems](./G20_camera_systems.md) · [E5 AI-Assisted Dev Workflow](../E/E5_ai_workflow.md) · [G5 UI Framework](./G5_ui_framework.md)
 
 ---

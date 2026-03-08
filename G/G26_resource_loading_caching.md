@@ -1,4 +1,7 @@
 # G26 — Resource Loading & Caching
+
+![](../img/camera.png)
+
 > **Category:** Guide · **Related:** [G8 Content Pipeline](./G8_content_pipeline.md) · [G13 C# Performance](./G13_csharp_performance.md) · [G15 Game Loop](./G15_game_loop.md) · [R3 Project Structure](../R/R3_project_structure.md)
 
 ---

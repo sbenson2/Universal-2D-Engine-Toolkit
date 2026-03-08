@@ -1,5 +1,8 @@
 # 16 — Performance Budget Template
 
+![](../img/roguelike.png)
+
+
 > **Summary:** A practical guide to setting and tracking performance budgets for your 2D MonoGame game. Plan for 60fps on modest hardware so you never hit "it works on my machine" surprises late in development.
 >
 > **See also:** [G33 — Profiling & Optimization](../G/G33_profiling_optimization.md) for deep-dive techniques referenced throughout this document.

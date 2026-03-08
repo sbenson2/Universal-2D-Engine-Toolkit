@@ -1,4 +1,7 @@
 # G2 — Rendering & Graphics
+
+![](../img/roguelike.png)
+
 > **Category:** Guide · **Related:** [G1 Custom Code Recipes](./G1_custom_code_recipes.md) · [R2 Capability Matrix](../R/R2_capability_matrix.md) · [G8 Content Pipeline](./G8_content_pipeline.md) · [G27 Shaders & Visual Effects](./G27_shaders_and_effects.md)
 
 > Deep dive into the MonoGame 2D rendering pipeline, SpriteBatch internals, optimization strategies, and integration with Arch ECS.

@@ -1,5 +1,8 @@
 # G54 — Fog of War & Visibility Systems
 
+![](../img/tilemap.png)
+
+
 > **Category:** Guide · **Related:** [G39 2D Lighting](./G39_2d_lighting.md) · [G37 Tilemap Systems](./G37_tilemap_systems.md) · [G2 Rendering & Graphics](./G2_rendering_and_graphics.md) · [G27 Shaders & Visual Effects](./G27_shaders_and_effects.md) · [G40 Pathfinding](./G40_pathfinding.md)
 
 Fog of war hides parts of the map the player hasn't seen or can't currently see. It's essential for strategy games (RTS, 4X), roguelikes, stealth games, and any game where information is power. This guide covers tile-based visibility tracking, efficient shadowcasting, smooth fog rendering with shaders, and full ECS integration.

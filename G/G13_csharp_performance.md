@@ -1,4 +1,7 @@
 # G13 — C# Performance
+
+![](../img/camera.png)
+
 > **Category:** Guide · **Related:** [G15 Game Loop](./G15_game_loop.md) · [G14 Data Structures](./G14_data_structures.md) · [E1 Architecture Overview](../E/E1_architecture_overview.md)
 
 ---

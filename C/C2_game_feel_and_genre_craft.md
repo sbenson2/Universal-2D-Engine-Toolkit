@@ -1,4 +1,7 @@
 # C2 — Game Feel & Genre Design Craft
+
+![](../img/physics.png)
+
 > **Category:** Catalog · **Related:** [C1 Genre Reference](./C1_genre_reference.md) · [G2 Rendering & Graphics](../G/G2_rendering_and_graphics.md) · [G3 Physics & Collision](../G/G3_physics_and_collision.md) · [G6 Audio](../G/G6_audio.md) · [G7 Input Handling](../G/G7_input_handling.md) · [G1 Custom Code Recipes](../G/G1_custom_code_recipes.md) · [G30 Game Feel Tooling](../G/G30_game_feel_tooling.md) · [R4 Game Design Resources](../R/R4_game_design_resources.md)
 
 ---

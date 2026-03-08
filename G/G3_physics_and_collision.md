@@ -1,4 +1,7 @@
 # G3 — Physics & Collision
+
+![](../img/physics.png)
+
 > **Category:** Guide · **Related:** [G1 Custom Code Recipes](./G1_custom_code_recipes.md) · [R2 Capability Matrix](../R/R2_capability_matrix.md)
 
 > Comprehensive physics and collision guide for MonoGame 3.8.x + Arch ECS 2.1.x + Aether.Physics2D 2.2.0 + MonoGame.Extended 5.3.1.
