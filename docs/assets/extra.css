@@ -1,0 +1,14 @@
+/* Pixel art image rendering for any inline images */
+img[src*="pixel"], img[src*="kenney"], img[src*="cap-"] {
+  image-rendering: pixelated;
+}
+
+/* Slightly wider content area */
+.md-grid {
+  max-width: 1400px;
+}
+
+/* Code block styling */
+.highlight code {
+  font-size: 0.8rem;
+}

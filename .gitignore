@@ -25,3 +25,4 @@ packages/
 
 # Claude Code
 .claude/
+docs_site/

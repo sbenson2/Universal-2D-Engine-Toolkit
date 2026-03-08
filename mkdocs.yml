@@ -1,0 +1,204 @@
+site_name: Universal 2D Engine Toolkit
+site_description: Build games, not frameworks. MonoGame + Arch ECS + Composed Libraries.
+site_url: https://sbenson2.github.io/Universal-2D-Engine-Toolkit/docs/
+repo_url: https://github.com/sbenson2/Universal-2D-Engine-Toolkit
+repo_name: sbenson2/Universal-2D-Engine-Toolkit
+
+docs_dir: docs
+site_dir: docs_site
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sbenson2/Universal-2D-Engine-Toolkit
+  generator: false
+
+extra_css:
+  - assets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.snippets:
+      base_path: docs
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.keys
+
+plugins:
+  - search
+  - tags
+
+nav:
+  - Home: index.md
+  - Reference:
+    - R1 — Library Stack: R/R1_library_stack.md
+    - R2 — Capability Matrix: R/R2_capability_matrix.md
+    - R3 — Project Structure: R/R3_project_structure.md
+    - R4 — Game Design Resources: R/R4_game_design_resources.md
+  - Explanations:
+    - E1 — Architecture Overview: E/E1_architecture_overview.md
+    - E2 — Why Nez Was Dropped: E/E2_nez_dropped.md
+    - E3 — Engine Alternatives: E/E3_engine_alternatives.md
+    - E4 — Project Management: E/E4_project_management.md
+    - E5 — AI-Assisted Workflow: E/E5_ai_workflow.md
+    - E6 — Game Design Fundamentals: E/E6_game_design_fundamentals.md
+    - E7 — Emergent Puzzle Design: E/E7_emergent_puzzle_design.md
+    - E9 — Solo Dev Playbook: E/E9_solo_dev_playbook.md
+  - Guides:
+    - Core:
+      - G1 — Custom Code Recipes: G/G1_custom_code_recipes.md
+      - G10 — Game Systems: G/G10_custom_game_systems.md
+      - G11 — Programming Principles: G/G11_programming_principles.md
+      - G12 — Design Patterns: G/G12_design_patterns.md
+      - G13 — C# Performance: G/G13_csharp_performance.md
+      - G14 — Data Structures: G/G14_data_structures.md
+      - G15 — Game Loop: G/G15_game_loop.md
+      - G18 — Game Programming Patterns: G/G18_game_programming_patterns.md
+    - Rendering & Graphics:
+      - G2 — Rendering & Graphics: G/G2_rendering_and_graphics.md
+      - G19 — Display & Resolution: G/G19_display_resolution_viewports.md
+      - G22 — Parallax & Depth: G/G22_parallax_depth_layers.md
+      - G23 — Particles: G/G23_particles.md
+      - G27 — Shaders & VFX: G/G27_shaders_and_effects.md
+      - G39 — 2D Lighting: G/G39_2d_lighting.md
+    - Physics & Movement:
+      - G3 — Physics & Collision: G/G3_physics_and_collision.md
+      - G52 — Character Controller: G/G52_character_controller.md
+      - G63 — Water Simulation: G/G63_water_simulation.md
+    - AI & Pathfinding:
+      - G4 — AI Systems: G/G4_ai_systems.md
+      - G40 — Pathfinding: G/G40_pathfinding.md
+    - UI & Input:
+      - G5 — UI Framework: G/G5_ui_framework.md
+      - G7 — Input Handling: G/G7_input_handling.md
+      - G55 — Settings Menu: G/G55_settings_menu.md
+      - G58 — Minimap: G/G58_minimap.md
+      - G61 — Tutorial & Onboarding: G/G61_tutorial_onboarding.md
+    - Audio:
+      - G6 — Audio: G/G6_audio.md
+    - Content & Assets:
+      - G8 — Content Pipeline: G/G8_content_pipeline.md
+      - G26 — Resource Loading: G/G26_resource_loading_caching.md
+      - G31 — Animation State Machines: G/G31_animation_state_machines.md
+      - G59 — Skeletal Animation: G/G59_skeletal_animation.md
+    - Camera & Coordinates:
+      - G20 — Camera Systems: G/G20_camera_systems.md
+      - G21 — Coordinate Systems: G/G21_coordinate_systems.md
+      - G24 — Window Management: G/G24_window_display_management.md
+      - G25 — Safe Areas: G/G25_safe_areas_adaptive_layout.md
+    - Perspectives:
+      - G28 — 3/4 Top-Down: G/G28_top_down_perspective.md
+      - G49 — Isometric: G/G49_isometric.md
+      - G56 — Side-Scrolling: G/G56_side_scrolling.md
+    - World Building:
+      - G37 — Tilemap Systems: G/G37_tilemap_systems.md
+      - G38 — Scene Management: G/G38_scene_management.md
+      - G42 — Screen Transitions: G/G42_screen_transitions.md
+      - G43 — Entity Prefabs: G/G43_entity_prefabs.md
+      - G53 — Procedural Generation: G/G53_procedural_generation.md
+    - Game Feel & Effects:
+      - G30 — Game Feel Tooling: G/G30_game_feel_tooling.md
+      - G41 — Tweening & Easing: G/G41_tweening.md
+      - G45 — Cutscenes: G/G45_cutscenes.md
+      - G54 — Fog of War: G/G54_fog_of_war.md
+      - G57 — Weather Effects: G/G57_weather_effects.md
+      - G60 — Trails & Lines: G/G60_trails_lines.md
+    - Game Systems:
+      - G46 — Modding Support: G/G46_modding_support.md
+      - G47 — Achievements: G/G47_achievements.md
+      - G48 — Online Services: G/G48_online_services.md
+      - G62 — Narrative Systems: G/G62_narrative_systems.md
+    - Networking:
+      - G9 — Networking: G/G9_networking.md
+    - DevOps & Quality:
+      - G16 — Debugging: G/G16_debugging.md
+      - G17 — Testing: G/G17_testing.md
+      - G29 — Game Editor: G/G29_game_editor.md
+      - G32 — Deployment: G/G32_deployment_platform_builds.md
+      - G33 — Profiling: G/G33_profiling_optimization.md
+      - G44 — Version Control: G/G44_version_control.md
+      - G50 — Hot Reload: G/G50_hot_reload.md
+      - G51 — Crash Reporting: G/G51_crash_reporting.md
+    - Publishing:
+      - G34 — Localization: G/G34_localization.md
+      - G35 — Accessibility: G/G35_accessibility.md
+      - G36 — Publishing: G/G36_publishing_distribution.md
+  - Catalog:
+    - C1 — Genre Reference: C/C1_genre_reference.md
+    - C2 — Game Feel & Genre Craft: C/C2_game_feel_and_genre_craft.md
+  - Playbook:
+    - P0 — Master Playbook: Playbook/00_master_playbook.md
+    - P1 — Pre-Production: Playbook/01_pre_production.md
+    - P2 — Milestones: Playbook/02_production_milestones.md
+    - P3 — Daily Workflow: Playbook/03_daily_workflow.md
+    - P4 — Playtesting: Playbook/04_playtesting.md
+    - P5 — Art Pipeline: Playbook/05_art_pipeline.md
+    - P6 — Audio Pipeline: Playbook/06_audio_pipeline.md
+    - P7 — Launch Checklist: Playbook/07_launch_checklist.md
+    - P8 — Common Pitfalls: Playbook/08_pitfalls.md
+    - P9 — GDD Template: Playbook/09_gdd_template.md
+    - P10 — Integration Map: Playbook/10_integration_map.md
+    - P11 — Polish Checklist: Playbook/11_polish_checklist.md
+    - P12 — Performance Budget: Playbook/12_performance_budget.md
+    - P13 — Release Pipeline: Playbook/13_release_pipeline.md
+    - P14 — Marketing Timeline: Playbook/14_marketing_timeline.md
+    - P15 — Post-Mortem: Playbook/15_postmortem_template.md
+  - Examples:
+    - examples/index.md

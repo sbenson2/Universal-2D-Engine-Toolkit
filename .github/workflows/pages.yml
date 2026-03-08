@@ -1,9 +1,8 @@
-name: Deploy Landing Page
+name: Deploy Site
 
 on:
   push:
     branches: [main]
-    paths: [landing/**]
   workflow_dispatch:
 
 permissions:
@@ -23,9 +22,33 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Prepare docs directory
+        run: |
+          # Copy doc source directories into docs/ for MkDocs
+          for dir in R E G C Playbook examples; do
+            cp -R "$dir" docs/
+          done
+
+      - name: Build docs site
+        run: mkdocs build
+
+      - name: Merge landing page + docs
+        run: |
+          mkdir -p _site
+          cp -R landing/* _site/
+          cp -R docs_site _site/docs
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: landing
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
