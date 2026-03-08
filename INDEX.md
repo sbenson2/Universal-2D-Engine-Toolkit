@@ -3,10 +3,11 @@
 
 [Get Started :material-rocket-launch:](./E/E1_architecture_overview.md){ .md-button .md-button--primary }
 [Browse Reference :material-book-open-variant:](./R/R1_library_stack.md){ .md-button }
+[Ship Your Game :material-checkbox-marked-circle:](./Playbook/00_master_playbook.md){ .md-button }
 
 <div class="grid-cards" markdown>
 <div class="card" markdown>
-<span class="card-number">76</span>
+<span class="card-number">92</span>
 <span class="card-label">Documents</span>
 </div>
 <div class="card" markdown>
@@ -14,12 +15,12 @@
 <span class="card-label">Step-by-step Guides</span>
 </div>
 <div class="card" markdown>
-<span class="card-number">10+</span>
-<span class="card-label">Libraries Covered</span>
+<span class="card-number">16</span>
+<span class="card-label">Playbook Docs</span>
 </div>
 <div class="card" markdown>
-<span class="card-number">~1K</span>
-<span class="card-label">Lines Custom Code</span>
+<span class="card-number">3</span>
+<span class="card-label">Starter Kits</span>
 </div>
 </div>
 
@@ -210,6 +211,26 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
     - [G18 Game Programming Patterns](./G/G18_game_programming_patterns.md) — 20 patterns for games
     - [G13 C# Performance](./G/G13_csharp_performance.md) — zero-alloc, Span, SIMD
 
+??? question "I'm ready to ship — what's the full production process?"
+
+    The **Playbook** takes you from pre-production through launch:
+
+    1. [P0 Master Playbook](./Playbook/00_master_playbook.md) — the complete idea-to-launch journey
+    2. [P1 Pre-Production](./Playbook/01_pre_production.md) — design doc, scope, art style
+    3. [P2 Milestones](./Playbook/02_production_milestones.md) — vertical slice → alpha → beta → gold
+    4. [P9 GDD Template](./Playbook/09_gdd_template.md) — fill in your game design document
+    5. [P10 Integration Map](./Playbook/10_integration_map.md) — which systems to build in what order
+    6. [P7 Launch Checklist](./Playbook/07_launch_checklist.md) — everything for launch day
+
+??? question "I want a starter project to build from"
+
+    Three genre-specific starter kits with ready-to-run code live in `Game Dev/Projects/`:
+
+    - **MonoGame-Starter** — base template with scene management, ECS bootstrap
+    - **Starter-Platformer** — character controller, tilemap, camera, enemies
+    - **Starter-TopDown-RPG** — movement, dialogue, inventory, tilemap
+    - **Starter-Roguelike** — procgen dungeon, turn system, fog of war, inventory
+
 ---
 
 ## Quick-Start Path
@@ -221,8 +242,9 @@ graph LR
     C --> D["4. Glue Code<br/><small>G1</small>"]
     D --> E["5. Pick Genre<br/><small>C1</small>"]
     E --> F["6. Design Craft<br/><small>C2 + E6</small>"]
-    F --> G["7. Systems<br/><small>G2–G10</small>"]
-    G --> H["8. Level Up<br/><small>G11–G18</small>"]
+    F --> G["7. Systems<br/><small>G2–G63</small>"]
+    G --> H["8. Polish<br/><small>P11</small>"]
+    H --> I["9. Ship It<br/><small>P0 + P7</small>"]
 
     style A fill:#7c4dff,color:#fff,stroke:none
     style B fill:#448aff,color:#fff,stroke:none
@@ -231,7 +253,8 @@ graph LR
     style E fill:#b388ff,color:#000,stroke:none
     style F fill:#69f0ae,color:#000,stroke:none
     style G fill:#ffab40,color:#000,stroke:none
-    style H fill:#ffab40,color:#000,stroke:none
+    style H fill:#ff6e40,color:#000,stroke:none
+    style I fill:#e040fb,color:#fff,stroke:none
 ```
 
 1. **Understand the stack** → [E1 Architecture Overview](./E/E1_architecture_overview.md)
@@ -240,10 +263,9 @@ graph LR
 4. **Write glue code** → [G1 Custom Code Recipes](./G/G1_custom_code_recipes.md)
 5. **Pick your genre** → [C1 Genre Reference](./C/C1_genre_reference.md)
 6. **Study the design craft** → [C2 Game Feel & Genre Craft](./C/C2_game_feel_and_genre_craft.md) + [E6 Game Design Fundamentals](./E/E6_game_design_fundamentals.md)
-7. **Dive into system-specific docs** → G2–G10 as needed
-8. **Level up your code** → G11–G18 for principles, patterns, and performance
-9. **Display & platform** → G19–G26 for resolution, camera, coordinates, particles, safe areas
-10. **Specialized topics** → [G28](./G/G28_top_down_perspective.md) for 3/4 top-down, [G29](./G/G29_game_editor.md) for building a game editor
+7. **Build your systems** → G2–G63 as needed (use [P10 Integration Map](./Playbook/10_integration_map.md) for build order)
+8. **Polish & juice** → [P11 Polish Checklist](./Playbook/11_polish_checklist.md) + [C2 Game Feel](./C/C2_game_feel_and_genre_craft.md)
+9. **Ship it** → [P0 Master Playbook](./Playbook/00_master_playbook.md) + [P7 Launch Checklist](./Playbook/07_launch_checklist.md)
 
 ---
 
