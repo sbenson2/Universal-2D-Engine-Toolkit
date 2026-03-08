@@ -201,4 +201,5 @@ nav:
     - P14 — Marketing Timeline: Playbook/14_marketing_timeline.md
     - P15 — Post-Mortem: Playbook/15_postmortem_template.md
   - Examples:
-    - examples/index.md
+    - Code Examples: examples/index.md
+    - Interactive Demos: examples/demos.md

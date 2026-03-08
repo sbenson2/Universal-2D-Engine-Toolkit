@@ -40,7 +40,7 @@ hide:
 
     Working C# examples extracted from the guides. Scene managers, pathfinding, procedural generation, character controllers, and more.
 
-    [:octicons-arrow-right-24: View Examples](examples/index.md)
+    [:octicons-arrow-right-24: View Examples](examples/index.md) · [:octicons-play-24: Interactive Demos](examples/demos.md)
 
 </div>
 
