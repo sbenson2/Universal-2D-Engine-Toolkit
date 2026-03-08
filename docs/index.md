@@ -81,3 +81,17 @@ This documentation follows the [Diátaxis framework](https://diataxis.fr/):
 4. **Build** → [G1 Custom Code Recipes](G/G1_custom_code_recipes.md)
 5. **Pick your genre** → [C1 Genre Reference](C/C1_genre_reference.md)
 6. **Ship it** → [P0 Master Playbook](Playbook/00_master_playbook.md)
+
+---
+
+## Support This Toolkit
+
+This entire knowledge base — 93 docs, 63 guides, 30+ interactive demos, and working code examples — is free and will stay free. No paywalls, no gated content, no email signup walls.
+
+If it saved you time, helped you learn something, or kept you from banging your head against a MonoGame problem for another hour, consider dropping a small tip:
+
+[:material-heart: Support on GitHub Sponsors](https://github.com/sponsors/sbenson2){ .md-button .md-button--primary }
+
+**Where it goes:** Keeping the docs maintained, adding new guides as the stack evolves, and funding the mass amounts of coffee required to write about ECS architecture at 2am.
+
+Even $1 helps — it tells me people are actually using this, which is the real motivation to keep it growing.

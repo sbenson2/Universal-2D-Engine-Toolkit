@@ -172,3 +172,8 @@ Screen transition effects between scenes.
 | File | What it does | Guide |
 |------|-------------|-------|
 | [`Transition.cs`](Transitions/Transition.cs) | Base transition with fade, wipe, iris patterns | [G42](../G/G42_screen_transitions.md) |
+
+---
+
+!!! tip "Support the toolkit"
+    Everything here is free and open. If these examples saved you time, consider a [$1 tip on GitHub Sponsors](https://github.com/sponsors/sbenson2) — it keeps the docs growing.

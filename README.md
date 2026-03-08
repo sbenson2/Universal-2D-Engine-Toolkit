@@ -103,7 +103,11 @@ Solo developers and small teams building 2D games with C# who want:
 
 ## Support This Project
 
-If this toolkit has saved you time, consider [sponsoring on GitHub](https://github.com/sponsors/sbenson2). It helps keep the docs maintained and growing.
+This entire toolkit — 93 docs, 63 guides, 30+ interactive demos, working code examples — is free and will stay free. No paywalls, no gated content.
+
+If it saved you time or helped you learn something, consider a small one-time tip on [GitHub Sponsors](https://github.com/sponsors/sbenson2). It keeps the docs maintained, funds new guides as the stack evolves, and tells me people are actually using this (which is the real motivation).
+
+Even $1 helps.
 
 ## License
 

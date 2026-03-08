@@ -3240,3 +3240,13 @@ Press any key or click/move the mouse to see inputs highlighted in real-time.
 ---
 
 All demos run entirely in-browser with vanilla JavaScript — no dependencies. The C# implementations in the [code examples](index.md) follow the same algorithms and patterns.
+
+---
+
+## Found this useful?
+
+This toolkit is free — 93 docs, 63 guides, 30+ interactive demos, and growing. No paywalls, no signup walls. If these demos saved you from reinventing A* pathfinding or debugging your own easing curves, consider a small tip:
+
+[:material-heart: Support on GitHub Sponsors](https://github.com/sponsors/sbenson2){ .md-button .md-button--primary }
+
+Even $1 tells me people are actually using this. That's the real fuel.
