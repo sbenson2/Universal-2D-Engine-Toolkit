@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>MyGame</RootNamespace>
+    <AssemblyName>MyGame</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Core Framework -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.3.1" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.3.1" />
+  </ItemGroup>
+
+  <!-- ECS -->
+  <ItemGroup>
+    <PackageReference Include="Arch" Version="2.1.0" />
+  </ItemGroup>
+
+  <!-- Standard Library Stack -->
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Extended" Version="5.3.1" />
+    <PackageReference Include="Apos.Input" Version="2.5.0" />
+    <PackageReference Include="FontStashSharp.MonoGame" Version="1.3.7" />
+    <PackageReference Include="MonoGame.Aseprite" Version="6.3.1" />
+    <PackageReference Include="Gum.MonoGame" Version="*" />
+    <PackageReference Include="BrainAI" Version="*" />
+    <PackageReference Include="ImGui.NET" Version="*" />
+    <PackageReference Include="Coroutine" Version="*" />
+  </ItemGroup>
+
+</Project>

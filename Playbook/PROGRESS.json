@@ -1,0 +1,28 @@
+{
+  "project": "Game Development Playbook",
+  "startedAt": "2026-03-07T19:16:00-08:00",
+  "endsAt": "2026-03-08T07:16:00-08:00",
+  "status": "complete",
+  "tasks": [
+    { "id": 1, "name": "Master Playbook", "file": "00_master_playbook.md", "status": "complete", "description": "Complete phase-by-phase guide to making a 2D game from idea to launch, referencing all 76 docs" },
+    { "id": 2, "name": "Project Template", "file": "01_project_template/", "status": "done", "completedAt": "2026-03-07T19:58:00-08:00", "description": "Starter .csproj, folder structure, boilerplate GameApp, Scene base, ECS bootstrap code" },
+    { "id": 3, "name": "Pre-Production Checklist", "file": "02_pre_production.md", "status": "done", "completedAt": "2026-03-07T20:02:00-08:00", "description": "Design doc template, genre selection guide, scope worksheet, art style decisions" },
+    { "id": 4, "name": "Production Milestones", "file": "03_production_milestones.md", "status": "done", "completedAt": "2026-03-07T20:06:00-08:00", "description": "Vertical slice → Alpha → Beta → RC → Gold milestone definitions with checklists" },
+    { "id": 5, "name": "Platformer Starter Kit", "file": "04_starter_platformer/", "status": "done", "completedAt": "2026-03-07T20:11:00-08:00", "description": "Copy-paste starter code for a platformer: character controller, tilemap, camera, enemies" },
+    { "id": 6, "name": "Top-Down RPG Starter Kit", "file": "05_starter_topdown_rpg/", "status": "done", "completedAt": "2026-03-07T20:16:00-08:00", "description": "Starter code for top-down RPG: movement, dialogue, inventory, tilemap, camera" },
+    { "id": 7, "name": "Roguelike Starter Kit", "file": "06_starter_roguelike/", "status": "done", "completedAt": "2026-03-07T20:22:00-08:00", "description": "Starter code for roguelike: procgen dungeon, turn system, fog of war, inventory" },
+    { "id": 8, "name": "Daily Dev Workflow", "file": "07_daily_workflow.md", "status": "done", "completedAt": "2026-03-07T20:25:00-08:00", "description": "Daily development routine, commit habits, playtest loop, task management" },
+    { "id": 9, "name": "Playtesting Guide", "file": "08_playtesting.md", "status": "done", "completedAt": "2026-03-07T20:29:00-08:00", "description": "How to playtest, feedback forms, recording sessions, iterating on feedback" },
+    { "id": 10, "name": "Art Production Pipeline", "file": "09_art_pipeline.md", "status": "done", "completedAt": "2026-03-07T20:35:00-08:00", "description": "Aseprite workflow, asset naming, sprite sheet organization, animation pipeline, placeholder art strategy" },
+    { "id": 11, "name": "Audio Production Pipeline", "file": "10_audio_pipeline.md", "status": "done", "completedAt": "2026-03-07T20:38:00-08:00", "description": "Sound effect creation/sourcing, music workflow, audio implementation checklist, mixing guide" },
+    { "id": 12, "name": "Launch Checklist", "file": "11_launch_checklist.md", "status": "done", "completedAt": "2026-03-07T20:42:00-08:00", "description": "Pre-launch (store pages, trailers, press kit), launch day, post-launch week" },
+    { "id": 13, "name": "Common Pitfalls & Solutions", "file": "12_pitfalls.md", "status": "done", "completedAt": "2026-03-07T20:46:00-08:00", "description": "Top 30 mistakes solo devs make and how to avoid them, with doc references" },
+    { "id": 14, "name": "Game Design Document Template", "file": "13_gdd_template.md", "status": "done", "completedAt": "2026-03-07T20:49:00-08:00", "description": "Fillable GDD template covering vision, mechanics, progression, content, scope" },
+    { "id": 15, "name": "System Integration Map", "file": "14_integration_map.md", "status": "done", "completedAt": "2026-03-07T20:53:00-08:00", "description": "How all 63 guide systems connect. Dependency graph. Build order. What to implement first" },
+    { "id": 16, "name": "Polish & Juice Checklist", "file": "15_polish_checklist.md", "status": "done", "completedAt": "2026-03-07T20:57:00-08:00", "description": "Comprehensive juice checklist: screen shake, hitstop, particles, sound, camera, UI animations" },
+    { "id": 17, "name": "Performance Budget Template", "file": "16_performance_budget.md", "status": "done", "completedAt": "2026-03-07T21:01:00-08:00", "description": "Target specs, frame budget allocation, entity count limits, draw call budgets, memory targets" },
+    { "id": 18, "name": "Release Build Pipeline", "file": "17_release_pipeline.md", "status": "done", "completedAt": "2026-03-07T21:05:00-08:00", "description": "Step-by-step build → test → sign → upload → verify for each platform" },
+    { "id": 19, "name": "Marketing Timeline", "file": "18_marketing_timeline.md", "status": "done", "completedAt": "2026-03-07T21:10:00-08:00", "description": "12-month marketing plan: announcement, devlogs, wishlists, trailer, press, launch" },
+    { "id": 20, "name": "Post-Mortem Template", "file": "19_postmortem_template.md", "status": "done", "completedAt": "2026-03-07T21:12:00-08:00", "description": "What went right, what went wrong, time tracking analysis, scope comparison, lessons learned" }
+  ]
+}
