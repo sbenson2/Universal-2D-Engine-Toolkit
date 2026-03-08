@@ -101,6 +101,10 @@ Solo developers and small teams building 2D games with C# who want:
 - Practical, code-heavy documentation (not theory)
 - A clear path from prototype to shipped game
 
+## Support This Project
+
+If this toolkit has saved you time, consider [sponsoring on GitHub](https://github.com/sponsors/sbenson2). It helps keep the docs maintained and growing.
+
 ## License
 
 This documentation is provided as-is for personal and educational use.
