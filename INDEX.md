@@ -35,6 +35,7 @@ This documentation follows a modified [Diátaxis framework](https://diataxis.fr/
 | **Explanation** | Architecture decisions, rationale, workflow | Before coding — "why this approach?", "what are the tradeoffs?" |
 | **Guide** | Step-by-step implementation instructions | During coding — "how do I build this?" |
 | **Catalog** | Comprehensive maps of options/genres | During planning — "what does my game need?" |
+| **Playbook** | Production checklists, pipelines, templates | During production — "how do I ship this?" |
 
 Each document is **self-contained** (readable on its own) and **cross-referenced** (links to related docs). If a library dies or a decision changes, update only the affected doc — the rest stays valid.
 
@@ -135,6 +136,26 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
 |-----|-------------|
 | [C1 — Genre Reference](./C/C1_genre_reference.md) | Every 2D genre → mechanics → which systems to use |
 | [C2 — Game Feel & Genre Design Craft](./C/C2_game_feel_and_genre_craft.md) | Genre-specific design values, juice toolkit (screen shake, hitstop, squash/stretch), camera systems |
+
+### Playbook (ship your game)
+| Doc | What's In It |
+|-----|-------------|
+| [P0 — Master Playbook](./Playbook/00_master_playbook.md) | Complete idea-to-launch journey in 7 phases, referencing all toolkit docs |
+| [P1 — Pre-Production Checklist](./Playbook/01_pre_production.md) | Design doc template, genre selection, scope worksheet, art style decisions |
+| [P2 — Production Milestones](./Playbook/02_production_milestones.md) | Vertical slice → Alpha → Beta → RC → Gold definitions with checklists |
+| [P3 — Daily Dev Workflow](./Playbook/03_daily_workflow.md) | Daily development routine, commit habits, playtest loop, task management |
+| [P4 — Playtesting Guide](./Playbook/04_playtesting.md) | How to playtest, feedback forms, recording sessions, iterating on feedback |
+| [P5 — Art Production Pipeline](./Playbook/05_art_pipeline.md) | Aseprite workflow, asset naming, sprite sheet organization, animation pipeline |
+| [P6 — Audio Production Pipeline](./Playbook/06_audio_pipeline.md) | Sound effect creation/sourcing, music workflow, audio implementation, mixing |
+| [P7 — Launch Checklist](./Playbook/07_launch_checklist.md) | Pre-launch (store pages, trailers, press kit), launch day, post-launch week |
+| [P8 — Common Pitfalls & Solutions](./Playbook/08_pitfalls.md) | Top 30 mistakes solo devs make and how to avoid them, with doc references |
+| [P9 — Game Design Document Template](./Playbook/09_gdd_template.md) | Fillable GDD covering vision, mechanics, progression, content, scope |
+| [P10 — System Integration Map](./Playbook/10_integration_map.md) | How all 63 guide systems connect, dependency graph, build order |
+| [P11 — Polish & Juice Checklist](./Playbook/11_polish_checklist.md) | Screen shake, hitstop, particles, sound, camera, UI animations checklist |
+| [P12 — Performance Budget Template](./Playbook/12_performance_budget.md) | Target specs, frame budget, entity count limits, draw call budgets, memory targets |
+| [P13 — Release Build Pipeline](./Playbook/13_release_pipeline.md) | Step-by-step build → test → sign → upload → verify for each platform |
+| [P14 — Marketing Timeline](./Playbook/14_marketing_timeline.md) | 12-month marketing plan: announcement, devlogs, wishlists, trailer, press, launch |
+| [P15 — Post-Mortem Template](./Playbook/15_postmortem_template.md) | What went right/wrong, time tracking, scope comparison, lessons learned |
 
 ---
 
