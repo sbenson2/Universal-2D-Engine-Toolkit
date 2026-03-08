@@ -20,6 +20,7 @@ Procedural generation turns algorithms into content — dungeons, terrain, loot,
 10. [Enemy Placement](#10-enemy-placement)
 11. [Validation & Guarantees](#11-validation--guarantees)
 12. [ECS Integration](#12-ecs-integration)
+13. [Island / Archipelago Generation](#13-island--archipelago-generation)
 
 ---
 
@@ -1443,6 +1444,143 @@ public static class SeedChannels
     public const int Events = 4;
 }
 ```
+
+---
+
+## 13 — Island / Archipelago Generation
+
+A multi-pass pipeline for generating island-based worlds (top-down RPGs, survival games, strategy). The approach composes rotated ellipses into distance fields, then applies terrain passes for natural-looking results.
+
+### Layout Templates
+
+Pre-define island configurations as collections of ellipses. Each layout places islands at specific relative positions with size and rotation parameters:
+
+```csharp
+public record struct IslandShape(float X, float Y, float RadiusX, float RadiusY, float Angle);
+
+public static List<IslandShape> LayoutDominantWithSatellites(int mapW, int mapH, Random rng)
+{
+    var islands = new List<IslandShape>();
+    float cx = mapW / 2f, cy = mapH / 2f;
+
+    // Large central island
+    islands.Add(new(cx, cy, mapW * 0.25f, mapH * 0.2f, rng.NextSingle() * 0.5f));
+
+    // 3-5 satellite islands at min distance from center
+    AddSmallIslands(islands, cx, cy, mapW, mapH, rng, count: rng.Next(3, 6),
+        minDist: mapW * 0.3f, sizeRange: (0.06f, 0.12f));
+
+    return islands;
+}
+```
+
+Variety comes from having 5-6 layout functions (continent, twin islands, archipelago chain, atoll, scattered) and picking one randomly per generation.
+
+### Distance Field Composition
+
+Convert island shapes to a distance field, then threshold for land:
+
+```csharp
+for (int y = 0; y < height; y++)
+for (int x = 0; x < width; x++)
+{
+    float minDist = float.MaxValue;
+    foreach (var island in shapes)
+    {
+        // Rotate point into ellipse's local space
+        float dx = x - island.X, dy = y - island.Y;
+        float cos = MathF.Cos(-island.Angle), sin = MathF.Sin(-island.Angle);
+        float lx = dx * cos - dy * sin;
+        float ly = dx * sin + dy * cos;
+
+        // Ellipse distance (approximate)
+        float d = (lx * lx) / (island.RadiusX * island.RadiusX)
+                + (ly * ly) / (island.RadiusY * island.RadiusY);
+        minDist = MathF.Min(minDist, d);
+    }
+
+    // d < 1.0 = inside ellipse → land
+    if (minDist < 0.6f) map.SetTile(x, y, TileType.Grass);
+    else if (minDist < 1.0f) map.SetTile(x, y, TileType.Sand);
+}
+```
+
+### Multi-Pass Terrain Pipeline
+
+Raw distance-field islands look artificial. Apply passes in order:
+
+| Pass | Purpose | Technique |
+|------|---------|-----------|
+| **Shape** | Place island ellipses | Distance field composition |
+| **Paths** | Connect islands with walkable bridges/sandbars | Biased drunkard's walk |
+| **Variety** | Add terrain diversity (dirt, stone) | Fractal noise thresholds |
+| **Clearings** | Create open areas on large islands | Circle stamp at island centers |
+| **Smooth** | Remove jagged edges | Cellular automata (2-3 passes) |
+| **Hierarchy** | Enforce sand buffers water | Any grass adjacent to water → sand |
+| **Cleanup** | Remove isolated tiles | Non-water with <2 same-type neighbors → downgrade |
+
+### Biased Drunkard's Walk for Paths
+
+Standard drunkard's walk is too random for connecting islands. Bias 70% of steps toward the target:
+
+```csharp
+int x = startX, y = startY;
+while (x != endX || y != endY)
+{
+    if (rng.NextSingle() < 0.7f)
+    {
+        // Move toward target
+        if (Math.Abs(endX - x) > Math.Abs(endY - y))
+            x += Math.Sign(endX - x);
+        else
+            y += Math.Sign(endY - y);
+    }
+    else
+    {
+        // Random step
+        switch (rng.Next(4))
+        {
+            case 0: x++; break; case 1: x--; break;
+            case 2: y++; break; case 3: y--; break;
+        }
+    }
+    x = Math.Clamp(x, 0, width - 1);
+    y = Math.Clamp(y, 0, height - 1);
+    map.SetTile(x, y, TileType.Sand); // path material
+}
+```
+
+### Terrain Hierarchy Enforcement
+
+A critical post-processing step: grass should never be cardinally adjacent to water. Insert a sand buffer:
+
+```csharp
+public static void EnforceTerrainHierarchy(TileMap map, int width, int height)
+{
+    // Snapshot grid to avoid feedback during iteration
+    TileType[,] snapshot = new TileType[width, height];
+    for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+            snapshot[x, y] = map.GetTile(x, y);
+
+    for (int y = 1; y < height - 1; y++)
+        for (int x = 1; x < width - 1; x++)
+        {
+            if (snapshot[x, y] == TileType.Water || snapshot[x, y] == TileType.Sand)
+                continue;
+
+            bool adjacentWater = snapshot[x, y-1] == TileType.Water ||
+                                 snapshot[x, y+1] == TileType.Water ||
+                                 snapshot[x-1, y] == TileType.Water ||
+                                 snapshot[x+1, y] == TileType.Water;
+
+            if (adjacentWater)
+                map.SetTile(x, y, TileType.Sand);
+        }
+}
+```
+
+This ensures clean shorelines with natural-looking sand beaches around every island.
 
 ---
 

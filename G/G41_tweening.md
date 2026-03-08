@@ -3,6 +3,81 @@
 
 Tweening (short for "in-betweening") interpolates values over time with configurable easing curves. This guide covers a complete, zero-allocation tween engine built for MonoGame + Arch ECS.
 
+> **Start simple.** The full engine below covers every edge case, but most games need far less. A production tween system can be as small as ~70 lines — a `TweenManager` that stores a list and an `Update` loop, and a `Tween` class with from/to/duration/easing/callback. `OnComplete` chaining handles sequencing. Only add pooling (>100 concurrent tweens), generic `Tween<T>` (frequent Vector2/Color interpolation), or formal sequences (complex multi-step animations) when you hit those thresholds.
+>
+> **Minimal production example (~70 LOC):**
+>
+> ```csharp
+> public class TweenManager
+> {
+>     private readonly List<Tween> _tweens = new();
+>
+>     public Tween Add(float from, float to, float duration, Action<float> setter,
+>                      Func<float, float>? easing = null)
+>     {
+>         Tween tween = new(from, to, duration, setter, easing);
+>         _tweens.Add(tween);
+>         return tween;
+>     }
+>
+>     public void Update(float dt)
+>     {
+>         for (int i = _tweens.Count - 1; i >= 0; i--)
+>         {
+>             _tweens[i].Update(dt);
+>             if (_tweens[i].IsComplete)
+>                 _tweens.RemoveAt(i);
+>         }
+>     }
+> }
+>
+> public class Tween
+> {
+>     private float _elapsed;
+>     private readonly float _duration;
+>     private readonly Action<float> _setter;
+>     private readonly Func<float, float> _easing;
+>     private readonly float _from, _to;
+>     private bool _completeFired;
+>
+>     public float Delay { get; set; }
+>     public bool IsComplete => _elapsed >= Delay + _duration;
+>     public Action? OnComplete { get; set; }
+>
+>     public Tween(float from, float to, float duration, Action<float> setter,
+>                  Func<float, float>? easing = null)
+>     {
+>         _from = from; _to = to; _duration = duration;
+>         _setter = setter; _easing = easing ?? (t => t);
+>     }
+>
+>     public void Update(float dt)
+>     {
+>         _elapsed = Math.Min(_elapsed + dt, Delay + _duration);
+>         float active = Math.Max(_elapsed - Delay, 0f);
+>         float t = _easing(active / _duration);
+>         _setter(_from + (_to - _from) * t);
+>
+>         if (active >= _duration && !_completeFired)
+>         {
+>             _completeFired = true;
+>             OnComplete?.Invoke();
+>         }
+>     }
+> }
+> ```
+>
+> **Sequencing via `OnComplete` chaining:**
+>
+> ```csharp
+> // Slide panel in, then fade text — no TweenSequence class needed
+> var slide = _tweens.Add(-200f, 0f, 0.4f, x => _panelX = x, Ease.BackOut);
+> slide.OnComplete = () =>
+> {
+>     _tweens.Add(0f, 1f, 0.3f, a => _textAlpha = a, Ease.SineOut);
+> };
+> ```
+
 ---
 
 ## 1 — Easing Functions

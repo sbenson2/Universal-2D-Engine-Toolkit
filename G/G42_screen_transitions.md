@@ -10,6 +10,63 @@ Screen transitions are the glue between scenes. A hard cut from gameplay to a me
 
 Everything here targets **MonoGame.Framework.DesktopGL** with **Arch ECS v2.1.0** and integrates with the scene lifecycle from [G38](./G38_scene_management.md).
 
+### Simpler Alternative: Progress-Based Transitions
+
+For many games, the 5-phase lifecycle below is more machinery than needed. A simpler model uses a polymorphic base class with a single 0-to-1 progress value — subclasses override `Draw` to composite two render targets:
+
+```csharp
+public abstract class SceneTransition
+{
+    protected float Elapsed;
+    protected float Duration;
+
+    public bool IsComplete => Elapsed >= Duration;
+    public float Progress => Duration > 0f ? Math.Clamp(Elapsed / Duration, 0f, 1f) : 1f;
+
+    protected SceneTransition(float duration) => Duration = duration;
+
+    public bool Update(float dt) { Elapsed += dt; return IsComplete; }
+
+    /// <summary>Draw the transition composite from two scene RTs.</summary>
+    public abstract void Draw(SpriteBatch batch, Texture2D fromRT, Texture2D toRT,
+        Rectangle destRect, Texture2D pixel);
+}
+```
+
+Concrete transitions are trivially short:
+
+```csharp
+public class FadeBlackTransition : SceneTransition
+{
+    public FadeBlackTransition(float duration = 0.6f) : base(duration) { }
+
+    public override void Draw(SpriteBatch batch, Texture2D fromRT, Texture2D toRT,
+        Rectangle destRect, Texture2D pixel)
+    {
+        float t = Progress;
+        float fadeOut = Math.Clamp(t * 2f, 0f, 1f);
+        float fadeIn = Math.Clamp(t * 2f - 1f, 0f, 1f);
+
+        batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+        if (t < 0.5f)
+        {
+            batch.Draw(fromRT, destRect, Color.White);
+            batch.Draw(pixel, destRect, Color.Black * fadeOut);
+        }
+        else
+        {
+            batch.Draw(toRT, destRect, Color.White);
+            batch.Draw(pixel, destRect, Color.Black * (1f - fadeIn));
+        }
+        batch.End();
+    }
+}
+```
+
+The SceneManager renders both scenes to separate RTs each frame during the transition, then hands them to the transition's `Draw`. Start with this model; graduate to the full lifecycle below when you need loading screens or async scene swaps.
+
+> **Critical: Temporal sync during transitions.** Both the outgoing and incoming scenes must receive `Update(dt)` every frame while a transition is active. If only the new scene updates, its simulation jumps forward while the old scene's render target shows stale state — visible as hitching in crossfades or mismatched physics in wipes.
+
 ---
 
 ## 1 — Transition Architecture
@@ -1193,7 +1250,9 @@ public class SceneManager
     {
         _transitions.Update(dt);
 
-        // Only update the active scene when not mid-transition
+        // ⚠️ This only updates the active scene when NOT transitioning.
+        // During transitions, BOTH scenes should update to maintain temporal sync.
+        // See "Simpler Alternative" above for the correct pattern.
         if (!IsTransitioning)
             _activeScene?.Update(dt);
     }

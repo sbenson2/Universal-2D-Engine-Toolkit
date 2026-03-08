@@ -48,6 +48,8 @@ public class SceneManager
 
 **Why custom:** Zero dependency. You control the lifecycle. No framework lock-in. Trivial to add transition effects (see Screen Transitions below).
 
+> **Growth path:** As your game grows, add `IUpdatable`/`IRenderable` lists to the `Scene` base class for composable subsystems — minimap, pause menu, and debug overlays register themselves rather than cluttering a monolithic `Update()`. Add a `DrawOverlay()` method for HUD elements that render outside virtual resolution scaling. `OnComplete` callback chaining on transitions handles sequencing without a formal sequence manager.
+
 ---
 
 ## 2. Render Layer System (~200 lines)
@@ -199,6 +201,8 @@ public static class Ease
 
 **Alternative:** `Apos.Tweens` NuGet for a fluent API.
 
+> **Growth path:** `OnComplete` callback chaining is sufficient for sequencing (slide in → then fade text). Only add pooling when you exceed ~100 concurrent tweens, generic `Tween<T>` when you frequently interpolate Vector2/Color, or a formal `TweenSequence` class when callback chains become unreadable.
+
 ---
 
 ## 6. Screen Transitions (~100 lines)
@@ -219,6 +223,8 @@ batch.Draw(sceneB, Vector2.Zero, Color.White * alpha);
 **Pixelate:** Shader that reduces resolution progressively, blending into the new scene.
 
 All are variations of the same pattern: two RenderTargets + a progress float + a shader or blend mode.
+
+> **Growth path:** Start with a progress-based polymorphic model (0-to-1 progress, subclasses override `Draw` with two RTs). Critical requirement: both scenes must update every frame during transitions for temporal sync. Graduate to a 5-phase lifecycle only when you need async loading screens.
 
 ---
 

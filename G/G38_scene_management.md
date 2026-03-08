@@ -16,6 +16,7 @@
 8. [Pause System](#8-pause-system)
 9. [Overlay Scenes](#9-overlay-scenes)
 10. [Practical Example](#10-practical-example)
+11. [Composable Scene Subsystems](#11-composable-scene-subsystems)
 
 ---
 
@@ -1427,6 +1428,61 @@ public sealed class GameOverScene : Scene
                               ▼           ▼       ▼
                          GameplayScene  Gameplay  MainMenu
 ```
+
+---
+
+## 11. Composable Scene Subsystems
+
+Scenes don't need to be monolithic. Instead of overriding `Update()` and `Draw()` with hundreds of lines, compose behavior from `IUpdatable` and `IRenderable` lists:
+
+```csharp
+public interface IUpdatable { void Update(float dt); }
+public interface IRenderable { void Draw(SpriteBatch batch); }
+
+public abstract class Scene
+{
+    public List<IUpdatable> Updatables { get; } = new();
+    public List<IRenderable> Renderables { get; } = new();
+
+    public virtual void Update(float dt)
+    {
+        foreach (IUpdatable u in Updatables)
+            u.Update(dt);
+    }
+
+    public virtual void Draw(SpriteBatch batch)
+    {
+        foreach (IRenderable r in Renderables)
+            r.Draw(batch);
+    }
+
+    /// <summary>Draw HUD/overlays at native resolution (after virtual resolution scaling).</summary>
+    public virtual void DrawOverlay(SpriteBatch batch) { }
+
+    public virtual void Unload() { }
+}
+```
+
+### Benefits
+
+- **Subsystems are self-contained**: A minimap, pause menu, or performance overlay implements `IUpdatable` and/or `IRenderable` and registers itself. No massive `Update()` switch statement.
+- **Easy to add/remove**: `Updatables.Add(new Minimap(...))` — done. Remove it and nothing else changes.
+- **Scene doesn't need to own ECS World**: Constructor DI of shared services (world, camera, etc.) works fine. The Scene base class stays lightweight.
+
+### DrawOverlay for HUD
+
+Instead of a full overlay scene stack (which requires its own scene lifecycle, input routing, and render targets), use `DrawOverlay()` for simple HUD elements that draw at native resolution after the virtual resolution scaling pass:
+
+```csharp
+// In GameApp.Draw():
+_virtualRes.BeginDraw();         // Set virtual-res RT
+_sceneManager.Draw(batch);       // Scene draws at virtual res
+_virtualRes.EndDraw(batch);      // Scale to display
+
+_sceneManager.DrawOverlay(batch); // HUD at native res (pause menu, perf overlay)
+```
+
+This avoids the complexity of overlay scene management while still supporting pause menus, debug overlays, and game-over screens that render outside the virtual resolution pipeline.
 
 ---
 

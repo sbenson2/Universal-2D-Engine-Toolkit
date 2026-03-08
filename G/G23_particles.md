@@ -421,6 +421,174 @@ For most games, the `ParticlePool` struct array replaces the need for a separate
 
 ---
 
+## Production Particle Systems
+
+As particle systems scale from prototyping to production, several patterns emerge as essential. These address real-world constraints — thousands of fire sources competing for pool slots, cross-system queries, and GPU fill rate limits.
+
+### Budget-Based Emission
+
+When many emitters compete for a shared pool (e.g. hundreds of burning tiles), naive emission starves later-iterated sources. Pre-count demand before emitting:
+
+```csharp
+// Count what needs particles this frame
+int burningCount = 0, emberCount = 0;
+for (int ty = startTY; ty <= endTY; ty++)
+    for (int tx = startTX; tx <= endTX; tx++)
+    {
+        if (fireGrid.IsBurning(tx, ty)) burningCount++;
+        else if (fireGrid.IsEmbers(tx, ty)) emberCount++;
+    }
+
+// Weight demand by visual importance (burning > embers)
+float totalDemand = burningCount * 2.5f + emberCount * 0.25f;
+float availableSlots = pool.Capacity - pool.ActiveCount;
+float budgetThrottle = totalDemand > 0f
+    ? MathHelper.Clamp(availableSlots / totalDemand, 0.1f, 1f)
+    : 1f;
+```
+
+Layer a coarse **pool-load throttle** on top for safety — bucket thresholds avoid per-frame division:
+
+```csharp
+float poolLoad = (float)pool.ActiveCount / pool.Capacity;
+float loadThrottle = poolLoad switch
+{
+    < 0.2f  => 1.0f,
+    < 0.4f  => 0.65f,
+    < 0.65f => 0.35f,
+    _       => 0.15f
+};
+float throttle = Math.Min(loadThrottle, budgetThrottle);
+```
+
+### Alternating Iteration Direction
+
+Grid-based emitters that iterate top-to-bottom create a visible starvation bias — top tiles always get pool slots first. Fix by alternating Y direction each frame:
+
+```csharp
+_reverseIteration = !_reverseIteration;
+int yFrom = _reverseIteration ? endTY : startTY;
+int yTo   = _reverseIteration ? startTY : endTY;
+int yStep = _reverseIteration ? -1 : 1;
+
+for (int ty = yFrom; ty != yTo + yStep; ty += yStep)
+    // ... emit particles for row
+```
+
+### Kill Bounds
+
+Particles that drift off-screen waste pool slots. Set kill bounds each frame from camera bounds + margin, and skip `OnParticleDeath` for culled particles (they weren't visible):
+
+```csharp
+/// <summary>
+/// Particles outside KillBounds are force-killed to recycle pool slots.
+/// Set each frame from camera bounds + generous margin.
+/// </summary>
+public Rectangle? KillBounds { get; set; }
+
+// In Update:
+if (kill.HasValue)
+{
+    Rectangle k = kill.Value;
+    if (p.Position.X < k.X || p.Position.X > k.Right ||
+        p.Position.Y < k.Y || p.Position.Y > k.Bottom)
+    {
+        // Force death — skip OnParticleDeath (no gameplay side-effects for culled particles)
+        _activeCount--;
+        if (i < _activeCount)
+            _particles[i] = _particles[_activeCount];
+        continue;
+    }
+}
+```
+
+### Tagged Particles and Cross-System Queries
+
+Tag particles by type so external systems can read specific subsets without iterating the full pool:
+
+```csharp
+// In Particle struct:
+public byte Tag; // 0 = untagged, 1 = ember, 2 = smoke, etc.
+
+// In ParticlePool:
+public void ForEachTagged(byte tag, Action<Vector2, float> callback)
+{
+    for (int i = 0; i < _activeCount; i++)
+    {
+        ref Particle p = ref _particles[i];
+        if (p.Tag == tag)
+            callback(p.Position, p.Alpha);
+    }
+}
+```
+
+**Use case:** The lighting system queries ember particles to place dynamic point lights on flying sparks:
+
+```csharp
+fireParticles.ForEachTagged(EmberTag, (pos, alpha) =>
+{
+    DrawLight(batch, pos.X, pos.Y, emberRadius * 0.5f, emberIntensity * alpha);
+});
+```
+
+### Frustum-Culled Draw
+
+Update processes all particles (physics must be correct), but Draw can skip off-screen particles. Pass camera bounds + padding to account for particle size and glow bleed:
+
+```csharp
+public void Draw(SpriteBatch batch, Texture2D pixel, Rectangle viewport, float padding)
+{
+    float left = viewport.X - padding;
+    float top = viewport.Y - padding;
+    float right = viewport.Right + padding;
+    float bottom = viewport.Bottom + padding;
+
+    for (int i = 0; i < _activeCount; i++)
+    {
+        ref Particle p = ref _particles[i];
+        if (p.Position.X < left || p.Position.X > right ||
+            p.Position.Y < top || p.Position.Y > bottom)
+            continue;
+        // ... draw particle
+    }
+}
+```
+
+### Velocity Delay Ramp
+
+Fire particles look better when they "grow in place" before drifting upward. Add a delay period where velocity ramps smoothly from 0 to full:
+
+```csharp
+// In Particle struct:
+public float VelocityDelay; // seconds before velocity fully kicks in
+
+// In Update:
+float velScale = (p.VelocityDelay > 0f && p.Life < p.VelocityDelay)
+    ? p.Life / p.VelocityDelay
+    : 1f;
+p.Position += p.Velocity * velScale * dt;
+```
+
+This prevents the "instant drift" look where particles teleport upward the frame they spawn.
+
+### Cached Interpolation
+
+Avoid recomputing per-particle values across multiple draw passes (main, glow, bloom). Cache interpolation results during Update:
+
+```csharp
+// In Particle struct — computed once per Update, read in Draw:
+public float T;                // Normalized lifetime [0..1]
+public float InterpolatedSize; // Lerp(Size, SizeEnd, T)
+public float Alpha;            // 1 - T (fade-out)
+
+// In Update, after advancing Life:
+p.T = p.Life / p.MaxLife;
+p.InterpolatedSize = MathHelper.Lerp(p.Size, p.SizeEnd, p.T);
+p.Alpha = 1f - p.T;
+```
+
+---
+
 ## See Also
 
 - [G1 Custom Code Recipes](./G1_custom_code_recipes.md) — ObjectPool for general reuse

@@ -169,7 +169,7 @@ A decision journal is a guided process for documenting project decisions as Arch
 4. **Decide and document** — Write an ADR file in `decisions/ADR-NNN_title.md` with context, options considered, decision, reasoning, and consequences
 5. **Review periodically** — Revisit ADRs when assumptions change. Update status to Superseded when a new ADR replaces an old decision
 
-ADR files live in `decisions/` at the project root. Format: `ADR-NNN_snake_case_title.md`. Auto-numbered by scanning existing files. Use the `/decision` slash command to run through this process interactively.
+ADR files live in `decisions/` at the project root. Format: `ADR-NNN_snake_case_title.md`. Auto-numbered by scanning existing files. Use the `/session` slash command to document decisions interactively (decision focus path).
 
 ---
 
@@ -190,7 +190,7 @@ A planning session is a structured kickoff for development work — whether it's
 6. **Surface open decisions** — Any choices that need documenting? Run the decision journal for each
 7. **Write session summary** — What was decided, what's next, any blockers
 
-Use the `/plan-session` slash command to run through this process interactively.
+Use the `/session` slash command to run through this process interactively.
 
 ---
 

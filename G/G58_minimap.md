@@ -831,3 +831,27 @@ minimap.PatchTile(12, 8, 0 /* floor */, fogGrid[12, 8]);
 - **Rotation:** Some games rotate the minimap so "up" always matches the player's facing direction. This is a simple rotation transform on the source rect and arrow angle, but test for player comfort — many find it disorienting.
 - **Render order:** Background → minimap texture → markers → player arrow → border/frame. Drawing the frame last hides any marker bleed at edges.
 - **Accessibility:** Don't rely on color alone for marker types. Use distinct shapes (dot, diamond, star, arrow) and consider a high-contrast mode.
+- **SafeArea integration:** On devices with notches or Dynamic Island (iOS), position the minimap relative to safe area insets rather than raw screen edges. This prevents the minimap from being occluded:
+  ```csharp
+  // Position minimap inside safe area
+  float safeRight = SafeArea.Right;   // pixels from right edge
+  float safeTop = SafeArea.Top;       // pixels from top edge
+  var destRect = new Rectangle(
+      (int)(virtualWidth - minimapSize - padding - safeRight),
+      (int)(padding + safeTop),
+      minimapSize, minimapSize);
+  ```
+- **Interactive elements:** Minimaps can host lightweight UI controls beyond passive display. A wind direction slider, zoom toggle, or compass overlay adds gameplay value without requiring a separate HUD panel. Use a `ConsumedInput` flag to prevent minimap interactions from propagating to the game world:
+  ```csharp
+  public bool ConsumedInput { get; private set; }
+
+  public void HandleInput(InputManager input)
+  {
+      ConsumedInput = false;
+      if (IsSliderDragging || sliderBounds.Contains(input.MousePosition))
+      {
+          // Handle slider interaction
+          ConsumedInput = true; // block downstream input processing
+      }
+  }
+  ```

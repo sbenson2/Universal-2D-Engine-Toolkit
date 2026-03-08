@@ -5,6 +5,31 @@
 
 Complete 2D lighting and shadow system built on MonoGame + Arch ECS. Covers the lightmap compositing approach, point/spot/ambient lights, ray-cast shadow volumes, normal-map lighting, light cookies, and performance strategies — with full HLSL shaders and production C# code.
 
+> **Recommended starting point: Simple Lightmap.** The full system below covers shadow casting, normal maps, and advanced techniques. But for most 2D games — especially top-down — a simple lightmap with radial gradient textures, additive light rendering, and multiply compositing is all you need. This approach powers FireStarter's entire lighting system in ~230 lines.
+>
+> **Quick-start recipe (covers 90% of use cases):**
+>
+> 1. Generate a **128×128 radial gradient texture** with smoothstep falloff — one texture serves all lights
+> 2. Each frame, render lights to a **lightmap RT** cleared to ambient color (~3% gray for night)
+> 3. Draw lights as **additive-blended** sprites (white circle, scaled by radius, tinted by intensity)
+> 4. Composite the lightmap over the scene with **multiply blending**:
+>    ```csharp
+>    private static readonly BlendState MultiplyBlend = new()
+>    {
+>        ColorBlendFunction = BlendFunction.Add,
+>        ColorSourceBlend = Blend.DestinationColor,
+>        ColorDestinationBlend = Blend.Zero,
+>        AlphaBlendFunction = BlendFunction.Add,
+>        AlphaSourceBlend = Blend.DestinationAlpha,
+>        AlphaDestinationBlend = Blend.Zero
+>    };
+>    ```
+> 5. For fire/torch flicker, modulate intensity with a multi-sine formula:
+>    `0.7 + sin(t*8)*0.15 + sin(t*13)*0.1`
+> 6. For particle lights, query tagged particles from the particle pool and draw small additive lights at each position
+>
+> Shadow casting and normal maps (covered below) are advanced techniques — add them only when the simple lightmap doesn't give enough visual depth.
+
 ---
 
 ## Table of Contents
