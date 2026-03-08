@@ -6,11 +6,11 @@
 
 <div class="grid-cards" markdown>
 <div class="card" markdown>
-<span class="card-number">64</span>
+<span class="card-number">76</span>
 <span class="card-label">Documents</span>
 </div>
 <div class="card" markdown>
-<span class="card-number">51</span>
+<span class="card-number">63</span>
 <span class="card-label">Step-by-step Guides</span>
 </div>
 <div class="card" markdown>
@@ -117,6 +117,18 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
 | [G49 — Isometric Perspective](./G/G49_isometric.md) | 2:1 dimetric math, coordinate conversion, diamond/staggered layouts, depth sorting, mouse picking, elevation, isometric pathfinding, camera |
 | [G50 — Hot Reload & Live Editing](./G/G50_hot_reload.md) | FileSystemWatcher, JSON/texture/shader/tilemap hot reload, hot reload manager, .NET hot reload limitations, ImGui live tuning |
 | [G51 — Crash Reporting & Production Errors](./G/G51_crash_reporting.md) | Global exception handler, crash dumps, local/remote reporting, Sentry integration, graceful degradation, error recovery, platform-specific handling |
+| [G52 — 2D Platformer Character Controller](./G/G52_character_controller.md) | Kinematic controller, ground detection, variable jump, coyote time, jump buffering, wall mechanics, slopes, one-way/moving platforms, ladders, dash, corner correction, collision resolution, tuning reference |
+| [G53 — Procedural Generation](./G/G53_procedural_generation.md) | Seeded random, noise functions, BSP dungeons, cellular automata caves, Wave Function Collapse, room templates, random walk, terrain, loot generation, validation |
+| [G54 — Fog of War & Visibility](./G/G54_fog_of_war.md) | Visibility states, line-of-sight, recursive shadowcasting, vision shapes, fog rendering/shader, entity visibility, minimap integration, strategy game patterns |
+| [G55 — Settings & Options Menu](./G/G55_settings_menu.md) | Settings data model, persistence, audio/video/input/accessibility/gameplay settings, key rebinding, apply/revert pattern, platform defaults |
+| [G56 — Side-Scrolling Perspective](./G/G56_side_scrolling.md) | Level design, tile layout, parallax, camera patterns, transitions, hazards, environmental mechanics, enemy patterns, metroidvania structure, endless runner |
+| [G57 — Weather & Environmental Effects](./G/G57_weather_effects.md) | Rain, snow, wind, fog, lightning, sandstorm, ambient particles, water effects, gameplay impact, weather cycle system |
+| [G58 — Minimap Systems](./G/G58_minimap.md) | Corner/fullscreen/world maps, tile rendering, icons/markers, fog integration, room-based maps, circular masking, dynamic updates |
+| [G59 — 2D Skeletal Animation](./G/G59_skeletal_animation.md) | Skeletal vs sprite comparison, Spine runtime, DragonBones, blending, mesh deformation, runtime bone manipulation, skins/equipment, art pipeline |
+| [G60 — Trail & Line Rendering](./G/G60_trails_lines.md) | Trail strips, triangle generation, fading/tapering, textured trails, thick lines, laser beams, rope/chain physics, lightning arcs, ghost trails |
+| [G61 — Tutorial & Onboarding](./G/G61_tutorial_onboarding.md) | Tutorial triggers, input prompts, UI highlighting, gating, tooltips, tutorial state machine, FTUE, contextual help, data-driven tutorials |
+| [G62 — Narrative & Branching Story](./G/G62_narrative_systems.md) | Branching dialogue, story flags, consequence system, Yarn/Ink integration, journal/codex, reputation, multiple endings, barks, narrative UI |
+| [G63 — 2D Water Simulation](./G/G63_water_simulation.md) | Spring-based surface, wave propagation, splash effects, buoyancy, water shader, tile-based water, currents, underwater physics, lava/acid variants |
 
 ### Catalog (plan your game)
 | Doc | What's In It |
@@ -163,6 +175,10 @@ Each document is **self-contained** (readable on its own) and **cross-referenced
     - Prefabs → [G43](./G/G43_entity_prefabs.md) · Version Control → [G44](./G/G44_version_control.md) · Cutscenes → [G45](./G/G45_cutscenes.md)
     - Modding → [G46](./G/G46_modding_support.md) · Achievements → [G47](./G/G47_achievements.md) · Online → [G48](./G/G48_online_services.md)
     - Isometric → [G49](./G/G49_isometric.md) · Hot Reload → [G50](./G/G50_hot_reload.md) · Crash Reporting → [G51](./G/G51_crash_reporting.md)
+    - Character Controller → [G52](./G/G52_character_controller.md) · Procgen → [G53](./G/G53_procedural_generation.md) · Fog of War → [G54](./G/G54_fog_of_war.md)
+    - Settings → [G55](./G/G55_settings_menu.md) · Side-Scrolling → [G56](./G/G56_side_scrolling.md) · Weather → [G57](./G/G57_weather_effects.md)
+    - Minimap → [G58](./G/G58_minimap.md) · Skeletal Anim → [G59](./G/G59_skeletal_animation.md) · Trails → [G60](./G/G60_trails_lines.md)
+    - Tutorials → [G61](./G/G61_tutorial_onboarding.md) · Narrative → [G62](./G/G62_narrative_systems.md) · Water → [G63](./G/G63_water_simulation.md)
 
 ??? question "I want to level up my code quality and patterns"
 
